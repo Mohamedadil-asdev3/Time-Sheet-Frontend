@@ -8,7 +8,14 @@ import WeeklyTaskData from "./WeeklyTaskData";
 import MonthlyTaskData from "./MonthlyTaskData";
 
 
-const TaskTabs = () => {
+const TaskTabs = ({ TaskData, onDeleteSuccess }) => {
+
+    const DailyTabelData = TaskData?.[0] || [];
+    const WeeklyTabelData = TaskData || [];
+    const MonthlyTabelData = TaskData || [];
+    console.log("Dailytabeldata", DailyTabelData);
+    console.log("Weeklytabeldata", WeeklyTabelData);
+    console.log("Monthlytabeldata", MonthlyTabelData);
 
     const [tab, setTab] = useState(0);
 
@@ -31,9 +38,9 @@ const TaskTabs = () => {
             </Tabs>
 
             <Box mt={3}>
-                {tab === 0 && <DailyTaskData />}
-                {tab === 1 && <WeeklyTaskData />}
-                {tab === 2 && <MonthlyTaskData />}
+                {tab === 0 && <DailyTaskData DailyTabelData={DailyTabelData} onDeleteSuccess={onDeleteSuccess} />}
+                {tab === 1 && <WeeklyTaskData WeeklyTabelData={WeeklyTabelData} />}
+                {tab === 2 && <MonthlyTaskData MonthlyTabelData={MonthlyTabelData} />}
             </Box>
         </Box>
     );

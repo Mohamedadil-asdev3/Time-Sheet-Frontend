@@ -65,7 +65,7 @@ const ProfileInfo = () => {
                             </Stack>
                         </Grid>
                     </Grid>
-                    <Grid container columnSpacing={8} rowSpacing={1} mt={0.5}>
+                    <Grid container columnSpacing={7} rowSpacing={1} mt={0.5}>
                         <Grid size="auto">
                             <InfoItem icon={<EmailIcon />} text="asdev3@stemzglobal.com" />
                         </Grid>

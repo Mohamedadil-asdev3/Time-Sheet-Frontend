@@ -24,7 +24,7 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
     const menuItems = [
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
         { text: 'Task', icon: <TaskIcon />, path: '/task' },
-        { text: 'Create', icon: <PeopleIcon />, path: '/create' },
+        // { text: 'Create', icon: <PeopleIcon />, path: '/create' },
         { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
     ];
 
