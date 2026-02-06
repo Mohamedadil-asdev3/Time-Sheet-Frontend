@@ -3,8 +3,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import TaskIcon from '@mui/icons-material/Task';
-import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ApprovalIcon from '@mui/icons-material/Approval';
+import GridViewIcon from '@mui/icons-material/GridView';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -14,7 +15,7 @@ const EXPANDED_WIDTH = 210;
 const HEADER_HEIGHT = 64;
 const drawerWidth = 210;
 
-const Sidebar = ({ mobileOpen, onMobileClose }) => {
+const Sidebar = () => {
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -23,8 +24,9 @@ const Sidebar = ({ mobileOpen, onMobileClose }) => {
 
     const menuItems = [
         { text: 'Dashboard', icon: <DashboardIcon />, path: '/dashboard' },
+        { text: 'ApprovalDashboard', icon: <GridViewIcon />, path: '/approvalDashboard' },
         { text: 'Task', icon: <TaskIcon />, path: '/task' },
-        // { text: 'Create', icon: <PeopleIcon />, path: '/create' },
+        { text: 'Approval', icon: <ApprovalIcon />, path: '/approval' },
         { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
     ];
 

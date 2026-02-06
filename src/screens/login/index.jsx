@@ -47,7 +47,7 @@ const Login = () => {
     };
 
     return (
-        <Grid container minHeight="96vh">
+        <Grid container minHeight="98vh">
             <Grid
                 size={{ xs: 12, sm: 12, md: 8 }}
                 display={{ xs: "none", md: "block" }}
@@ -56,7 +56,6 @@ const Login = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
-                    minHeight: "100vh",
                 }}
             />
             <Grid

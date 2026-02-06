@@ -7,6 +7,8 @@ import AppLayout from "./layout/AppLayOut";
 import TaskPage from "./screens/TaskPage";
 import CreateTask from "./screens/CreateTask";
 import Settings from "./screens/Settings/index.jsx";
+import ApprovalPage from "./screens/approvalPage/index.jsx";
+import ApprovalDashboard from "./screens/approvalDashboard/index.jsx";
 
 
 const token = getAccessToken();
@@ -22,12 +24,11 @@ const App = () => {
         <Route path="/" element={<Login />} />
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/approvalDashboard" element={<ApprovalDashboard />} />
           <Route path="/task" element={<TaskPage />} />
           <Route path="/addTask" element={<CreateTask />} />
           <Route path="/settings" element={<Settings />} />
-          {/* <Route path="/users" element={<Users />} />
-          <Route path="/settings" element={<Settings />} /> */}
-          {/* <Route path="*" element={<NotFound />} /> */}
+          <Route path="/approval" element={<ApprovalPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
