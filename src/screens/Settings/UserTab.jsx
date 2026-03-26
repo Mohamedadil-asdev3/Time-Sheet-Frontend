@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
 
-const UserTabs = ({ }) => {
+const UserTabs = ({user}) => {
 
     const [search, setSearch] = useState("");
     const [openModal, setOpenModal] = useState(false);
@@ -13,8 +13,8 @@ const UserTabs = ({ }) => {
     const TabelHeader = [
         { id: 1, title: "S.No" },
         { id: 2, title: "Name" },
-        { id: 3, title: "Display Name" },
-        { id: 4, title: "Description" },
+        { id: 3, title: "Entity" },
+        { id: 4, title: "Email" },
         { id: 5, title: "Action" },
         { id: 6, title: "Status" },
     ];
@@ -63,14 +63,14 @@ const UserTabs = ({ }) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {filteredEntities?.length === 0 ? (
+                                    {user?.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={TabelHeader.length} align="center" sx={{ py: 4 }}>
-                                                <Typography color="text.secondary">No Enitity found</Typography>
+                                                <Typography color="text.secondary">No User found</Typography>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        filteredEntities?.map((data) => (
+                                        user?.map((data) => (
                                             <TableRow
                                                 key={data.id}
                                                 hover
@@ -80,9 +80,9 @@ const UserTabs = ({ }) => {
                                                 }}
                                             >
                                                 <TableCell>{data.id}</TableCell>
-                                                <TableCell>{data.name}</TableCell>
-                                                <TableCell>{data.displayName}</TableCell>
-                                                <TableCell>{data.description}</TableCell>
+                                                <TableCell>{data.realname}</TableCell>
+                                                <TableCell>{data.entities_ids}</TableCell>
+                                                <TableCell>{data.email}</TableCell>
                                                 <TableCell>
                                                     <IconButton
                                                         color="warning"
@@ -98,7 +98,7 @@ const UserTabs = ({ }) => {
                                                         onChange={() => handleToggleActive(data.id, data.is_active)}
                                                         color="primary"
                                                         size="small"
-                                                        disabled={loading}
+                                                        
                                                     />
                                                     <Typography
                                                         variant="caption"

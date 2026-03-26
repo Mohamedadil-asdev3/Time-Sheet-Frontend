@@ -66,7 +66,7 @@ const SubTaskTab = ({ subTasks }) => {
                                     {subTasks?.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={TabelHeader.length} align="center" sx={{ py: 4 }}>
-                                                <Typography color="text.secondary">No Enitity found</Typography>
+                                                <Typography color="text.secondary">No SubTask found</Typography>
                                             </TableCell>
                                         </TableRow>
                                     ) : (

@@ -40,8 +40,8 @@ const WeeklyTaskData = ({ WeeklyTabelData }) => {
     const groupedData = useMemo(() => {
         const weekGroups = {};
 
-        WeeklyTabelData.forEach((group) => {
-            group.tasks.forEach((task) => {
+        WeeklyTabelData?.forEach((group) => {
+            group?.tasks?.forEach((task) => {
                 const weekKey = getWeekKey(task.date);
                 if (!weekGroups[weekKey]) weekGroups[weekKey] = {};
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 // export const Media_URL = "http://localhost:8000";
 
-const API_BASE_URL = "http://192.168.60.163:8000/";
+const API_BASE_URL = "http://localhost:8000/";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -78,14 +78,15 @@ export const changePasswordAPI = async (passwordData, token) => {
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem("access_token");
-    console.log(token);
-    
+    //console.log(token);
+
     return {
         Authorization: `Bearer ${token}`,
     };
 };
 
-/* ───────────────── ENTITY ───────────────── */
+// Admin panel api list
+// ENTITY
 
 export const fetchEntitiesAPI = async () => {
     try {
@@ -100,41 +101,37 @@ export const fetchEntitiesAPI = async () => {
 };
 
 export const createEntityAPI = async (payload) => {
-    return api.post("master/entity/", payload, { headers: getAuthHeaders() });
+    try {
+        const res = await api.post("master/entity/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Entity Api", err.response?.data || err.message);
+        throw err
+    }
 };
 
 export const updateEntityAPI = async (id, payload) => {
-    return api.put(`master/entity/${id}/`, payload, { headers: getAuthHeaders() });
+    try {
+        const res = await api.put(`master/entity/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Entity Api", err.response?.data || err.message);
+        throw err
+    }
 };
 
 export const getEntityByIdAPI = async (id) => {
     return api.get(`entity/${id}/`, { headers: getAuthHeaders() });
 };
 
-/* ───────────────── DEPARTMENT ───────────────── */
 
-export const fetchDepartmentsAPI = async () => {
-    try {
-        const res = await api.get("master/department/", {
-            headers: getAuthHeaders(),
-        });
-        return res.data;
-    } catch (err) {
-        console.error("Failed to fetch departments:", err.response?.data || err.message);
-        throw err;
-    }
-};
-
-export const createDepartmentAPI = (payload) =>
-    api.post("department/", payload, { headers: getAuthHeaders() });
-
-export const updateDepartmentAPI = (id, payload) =>
-    api.put(`department/${id}/`, payload, { headers: getAuthHeaders() });
-
-export const getDepartmentByIdAPI = (id) =>
-    api.get(`department/${id}/`, { headers: getAuthHeaders() });
-
-/* ───────────────── LOCATION ───────────────── */
+//LOCATION
 
 export const fetchLocationsAPI = async () => {
     try {
@@ -148,16 +145,127 @@ export const fetchLocationsAPI = async () => {
     }
 };
 
-export const createLocationAPI = (payload) =>
-    api.post("location/", payload, { headers: getAuthHeaders() });
+export const createLocationAPI = async (payload) => {
+    try {
+        const res = await api.post("master/location/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Department Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
-export const updateLocationAPI = (id, payload) =>
-    api.put(`location/${id}/`, payload, { headers: getAuthHeaders() });
+export const updateLocationAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`master/location/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Location Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
 export const getLocationByIdAPI = (id) =>
     api.get(`location/${id}/`, { headers: getAuthHeaders() });
 
-/* ───────────────── TASK ───────────────── */
+
+//DEPARTMENT
+
+export const fetchDepartmentsAPI = async () => {
+    try {
+        const res = await api.get("master/department/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch departments:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const createDepartmentAPI = async (payload) => {
+    try {
+        const res = await api.post("master/department/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Department Api", err.response?.data || err.message);
+        throw err
+    }
+};
+
+export const updateDepartmentAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`master/department/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
+
+export const getDepartmentByIdAPI = (id) =>
+    api.get(`department/${id}/`, { headers: getAuthHeaders() });
+
+
+//ROLE
+
+export const fetchRolesAPI = async (entityId = null) => {
+    try {
+        let url = "master/role/";
+        if (entityId) {
+            url += `?entity_id=${entityId}`;
+        }
+        const res = await api.get(url, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch roles:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const createRoleAPI = async (payload) => {
+    try {
+        const res = await api.post("role/", payload, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to create Role:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const updateRoleAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`role/${id}/`, payload, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to update user:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const getRoleByIdAPI = (id) =>
+    api.get(`role/${id}/`, { headers: getAuthHeaders() });
+
+
+//TASK
 
 export const fetchTasksAPI = async () => {
     try {
@@ -196,12 +304,13 @@ export const updateTaskAPI = async (id, payload) => {
         throw err
     }
 };
-  
+
 
 export const getTaskByIdAPI = (id) =>
     api.get(`task/${id}/`, { headers: getAuthHeaders() });
 
-/* ───────────────── SUB TASK ───────────────── */
+
+//SUB TASK
 
 export const fetchSubTasksAPI = async (taskId = null) => {
     let url = "master/subtask/";
@@ -218,43 +327,130 @@ export const fetchSubTasksAPI = async (taskId = null) => {
     }
 };
 
-export const createSubTaskAPI = (payload) =>
-    api.post("subtask/", payload, { headers: getAuthHeaders() });
+export const createSubTaskAPI = async (payload) => {
+    try {
+        const res = await api.post("master/subtask/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
-export const updateSubTaskAPI = (id, payload) =>
-    api.put(`subtask/${id}/`, payload, { headers: getAuthHeaders() });
+export const updateSubTaskAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`master/subtask/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
 export const getSubTaskByIdAPI = (id) =>
     api.get(`subtask/${id}/`, { headers: getAuthHeaders() });
 
-/* ───────────────── ROLE ───────────────── */
 
-export const fetchRolesAPI = async (entityId = null) => {
+// Holiday
+export const fetchHolidayAPI = async (taskId = null) => {
+    let url = "master/holidays/";
+    if (taskId) url += `?task_id=${taskId}`;
+
     try {
-        let url = "master/role/";
-        if (entityId) {
-            url += `?entity_id=${entityId}`;
-        }
         const res = await api.get(url, {
             headers: getAuthHeaders(),
         });
         return res.data;
     } catch (err) {
-        console.error("Failed to fetch roles:", err.response?.data || err.message);
+        console.error("Failed to fetch subtasks:", err.response?.data || err.message);
         throw err;
     }
 };
 
-export const createRoleAPI = (payload) =>
-    api.post("role/", payload, { headers: getAuthHeaders() });
+export const createHolidayAPI = async (payload) => {
+    try {
+        const res = await api.post("master/holidays/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
-export const updateRoleAPI = (id, payload) =>
-    api.put(`role/${id}/`, payload, { headers: getAuthHeaders() });
+export const updateHolidayAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`master/holidays/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
-export const getRoleByIdAPI = (id) =>
-    api.get(`role/${id}/`, { headers: getAuthHeaders() });
+export const getHolidayByIdAPI = (id) =>
+    api.get(`holidays/${id}/`, { headers: getAuthHeaders() });
 
-/* ───────────────── PLATFORM ───────────────── */
+
+// Email Template
+export const fetchEmailAPI = async (taskId = null) => {
+    let url = "master/email-templates/";
+    if (taskId) url += `?task_id=${taskId}`;
+
+    try {
+        const res = await api.get(url, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch subtasks:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const createEmailAPI = async (payload) => {
+    try {
+        const res = await api.post("master/email-templates/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
+
+export const updateEmailAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`master/email-templates/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
+
+export const getEmailByIdAPI = (id) =>
+    api.get(`email-templates/${id}/`, { headers: getAuthHeaders() });
+
+
+
+//PLATFORM
 
 export const fetchPlatformsAPI = async () => {
     try {
@@ -268,17 +464,38 @@ export const fetchPlatformsAPI = async () => {
     }
 };
 
-export const createPlatformAPI = (payload) =>
-    api.post("platform/", payload, { headers: getAuthHeaders() });
+export const createPlatformAPI = async (payload) => {
+    try {
+        const res = await api.post("platform/", {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Create Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
-export const updatePlatformAPI = (id, payload) =>
-    api.put(`platform/${id}/`, payload, { headers: getAuthHeaders() });
+export const updatePlatformAPI = async (id, payload) => {
+    try {
+        const res = await api.put(`platform/${id}/`, {
+            headers: getAuthHeaders(),
+            payload
+        })
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch Update Task Api", err.response?.data || err.message);
+        throw err
+    }
+};
 
 export const getPlatformByIdAPI = (id) =>
     api.get(`platform/${id}/`, { headers: getAuthHeaders() });
 
-/* ───────────────── STATUS ───────────────── */
 
+
+//STATUS
 export const fetchStatusesAPI = async () => {
     try {
         const res = await api.get("status/", {
@@ -300,11 +517,10 @@ export const updateStatusAPI = (id, payload) =>
 export const getStatusByIdAPI = (id) =>
     api.get(`status/${id}/`, { headers: getAuthHeaders() });
 
-/* ───────── TASK LIST ───────── */
 
-/**
- * GET – List all tasks (current user)
- */
+//TASK LIST
+//GET – List all tasks (current user)
+
 export const fetchTasksListAPI = async () => {
     try {
         const res = await api.get("task/taskslist/", {
@@ -317,9 +533,8 @@ export const fetchTasksListAPI = async () => {
     }
 };
 
-/**
- * GET – Task by ID
- */
+//GET – Task by ID
+
 export const getTaskListByIdAPI = async (id) => {
     try {
         const res = await api.get(`taskslist/${id}/`, {
@@ -332,9 +547,8 @@ export const getTaskListByIdAPI = async (id) => {
     }
 };
 
-/**
- * POST – Create task
- */
+//POST – Create task
+
 export const createTaskListAPI = async (payload) => {
     try {
         const res = await api.post("task/createTask/", payload, {
@@ -347,9 +561,8 @@ export const createTaskListAPI = async (payload) => {
     }
 };
 
-/**
- * PUT – Update task
- */
+//PUT – Update task
+
 export const updateTaskListAPI = async (id, payload) => {
     try {
         const res = await api.put(`taskslist/${id}/`, payload, {
@@ -362,9 +575,8 @@ export const updateTaskListAPI = async (id, payload) => {
     }
 };
 
-/**
- * DELETE – Delete task
- */
+//DELETE – Delete task
+
 export const deleteTaskListAPI = async (id) => {
     try {
         const res = await api.delete(`task/taskslist/${id}/`, {
@@ -378,14 +590,12 @@ export const deleteTaskListAPI = async (id) => {
 };
 
 
-/* ───────── USERS ───────── */
+//USERS
+//GET – List all users
 
-/**
- * GET – List all users
- */
 export const fetchUsersAPI = async () => {
     try {
-        const res = await api.get("users/", {
+        const res = await api.get("api/users/", {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -395,9 +605,8 @@ export const fetchUsersAPI = async () => {
     }
 };
 
-/**
- * GET – User by ID
- */
+//GET – User by ID
+
 export const getUserByIdAPI = async (id) => {
     try {
         const res = await api.get(`users/${id}/`, {
@@ -410,9 +619,8 @@ export const getUserByIdAPI = async (id) => {
     }
 };
 
-/**
- * POST – Create user
- */
+//POST – Create user
+
 export const createUserAPI = async (payload) => {
     try {
         const res = await api.post("users/", payload, {
@@ -425,9 +633,8 @@ export const createUserAPI = async (payload) => {
     }
 };
 
-/**
- * PUT – Update user
- */
+//PUT – Update user
+
 export const updateUserAPI = async (id, payload) => {
     try {
         const res = await api.put(`users/${id}/`, payload, {
@@ -440,9 +647,8 @@ export const updateUserAPI = async (id, payload) => {
     }
 };
 
-/**
- * DELETE – Delete user
- */
+//DELETE – Delete user
+
 export const deleteUserAPI = async (id) => {
     try {
         const res = await api.delete(`users/${id}/`, {
@@ -455,11 +661,9 @@ export const deleteUserAPI = async (id) => {
     }
 };
 
-/* ───────── USER ROLE MAPPINGS ───────── */
+//USER ROLE MAPPINGS
+//GET – List all user-role mappings
 
-/**
- * GET – List all user-role mappings
- */
 export const fetchUserRoleMappingsAPI = async () => {
     try {
         const res = await api.get("user-role-mappings/", {
@@ -472,9 +676,8 @@ export const fetchUserRoleMappingsAPI = async () => {
     }
 };
 
-/**
- * GET – Mapping by ID
- */
+//GET – Mapping by ID
+
 export const getUserRoleMappingByIdAPI = async (id) => {
     try {
         const res = await api.get(`user-role-mappings/${id}/`, {
@@ -487,9 +690,8 @@ export const getUserRoleMappingByIdAPI = async (id) => {
     }
 };
 
-/**
- * POST – Create mapping
- */
+//POST – Create mapping
+
 export const createUserRoleMappingAPI = async (payload) => {
     try {
         const res = await api.post("user-role-mappings/", payload, {
@@ -502,9 +704,8 @@ export const createUserRoleMappingAPI = async (payload) => {
     }
 };
 
-/**
- * PUT – Update mapping
- */
+//PUT – Update mapping
+
 export const updateUserRoleMappingAPI = async (id, payload) => {
     try {
         const res = await api.put(`user-role-mappings/${id}/`, payload, {
@@ -517,9 +718,8 @@ export const updateUserRoleMappingAPI = async (id, payload) => {
     }
 };
 
-/**
- * DELETE – Delete mapping
- */
+//DELETE – Delete mapping
+
 export const deleteUserRoleMappingAPI = async (id) => {
     try {
         const res = await api.delete(`user-role-mappings/${id}/`, {
@@ -528,6 +728,232 @@ export const deleteUserRoleMappingAPI = async (id) => {
         return res.data;
     } catch (err) {
         console.error("Failed to delete mapping:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+
+// User Profile
+export const fetchUserProfileAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+
+// user dashboard
+export const fetchUserCardCountAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchDailyTimelineAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTaskStatusOverviewAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchWorkHoursOverviewAPI = async (params = {}) => {
+    try {
+        const res = await api.get("task/work-hours/", {
+            headers: getAuthHeaders(),
+            params: { view: params.view }
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTimeDistributionByTaskAPI = async (params = {}) => {
+    try {
+        const res = await api.get("task/tasks/time-distribution/", {
+            headers: getAuthHeaders(),
+            params: { view: params.view }
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchRecentTasksAPI = async () => {
+    try {
+        const res = await api.get("task/tasks/recent-tasks/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTopTasksUsedAPI = async () => {
+    try {
+        const res = await api.get("task/tasks/top-tasks/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+// approver dashboard
+
+export const fetchApprovalCardCountAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTopMenbersAPI = async () => {
+    try {
+        const res = await api.get("task/top-members/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchRecendApprovalAPI = async () => {
+    try {
+        const res = await api.get("tasks/approvals/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTaskStatusOverviewApprovalAPI = async () => {
+    try {
+        const res = await api.get("tasks/approvals/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTimeDistributionByMemberAPI = async () => {
+    try {
+        const res = await api.get("task/time-distribution/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTodayTasksAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchTopPlatformAPI = async () => {
+    try {
+        const res = await api.get("task/top-platforms/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchPlatformOverviewAPI = async () => {
+    try {
+        const res = await api.get("task/platform-performance/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const fetchMemberAPI = async () => {
+    try {
+        const res = await api.get("task/profile/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+
+// approval page
+export const fetchApprovalGetAPI = async () => {
+    try {
+        const res = await api.get("task/approval-table/", {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err.response?.data || err.message);
         throw err;
     }
 };

@@ -66,7 +66,7 @@ const TaskTab = ({ tasks }) => {
                                     {tasks?.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={TabelHeader.length} align="center" sx={{ py: 4 }}>
-                                                <Typography color="text.secondary">No Enitity found</Typography>
+                                                <Typography color="text.secondary">No Task found</Typography>
                                             </TableCell>
                                         </TableRow>
                                     ) : (

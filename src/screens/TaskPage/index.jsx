@@ -3,13 +3,15 @@ import ProfileInfo from "./ProfileInfo";
 import TaskSearch from "./TaskSearch";
 import TaskTabs from "./TaskTabs";
 import { useEffect, useState } from "react";
-import { fetchTasksListAPI } from "../../Api";
+import { fetchTasksListAPI, fetchUserProfileAPI } from "../../Api";
 import { toast } from "react-toastify";
 
 
 const TaskPage = () => {
 
     const [TaskData, setTaskData] = useState(null);
+    console.log("task", TaskData);
+    const [profileData, setProfileData] = useState(null);
     const [dailyData, setDailyData] = useState({
         date: "",
         task: []
@@ -24,7 +26,6 @@ const TaskPage = () => {
 
             const List = res || null;
             setTaskData(List)
-            console.log("task", TaskData)
 
         } catch (error) {
             console.error("Dashboard load error:", error);
@@ -34,12 +35,30 @@ const TaskPage = () => {
         }
     };
 
+    const fetchUserProfileData = async () => {
+        try {
+            setLoading(true);
+            const res = await fetchUserProfileAPI();
+            console.log("profile", res);
+
+            setProfileData(res);
+        } catch (error) {
+            console.log("Failed to load Profile data")
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserProfileData()
+    }, []);
+
     useEffect(() => {
         fetchTaskData();
     }, [dailyData]);
 
     const handleTaskDeleted = (deletedId) => {
-        console.log('deletedId',deletedId);
+        console.log('deletedId', deletedId);
         setDailyData(prev => {
             if (!prev?.task) return prev;
             return {
@@ -53,7 +72,7 @@ const TaskPage = () => {
         <>
             <Grid container spacing={2}>
                 <Grid size={12}>
-                    <ProfileInfo />
+                    <ProfileInfo profileData={profileData} />
                 </Grid>
                 <Grid size={12}>
                     <TaskSearch />

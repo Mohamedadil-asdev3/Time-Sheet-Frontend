@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Grid, IconButton, InputAdornment, Stack, TextField, Typography, Divider, Link, Alert, } from "@mui/material";
+import { Box, Button, Grid, IconButton, InputAdornment, Stack, TextField, Typography, Divider, Link, } from "@mui/material";
 import bgImage from "../../assets/loginpage.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { loginAPI } from "../../Api";
@@ -11,8 +11,8 @@ const Login = () => {
 
     const navigate = useNavigate();
 
-    const [username, setUsername] = useState("asdev3");
-    const [password, setPassword] = useState("Mohamed@20965");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
