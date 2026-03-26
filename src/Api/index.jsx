@@ -934,7 +934,7 @@ export const fetchPlatformOverviewAPI = async () => {
 
 export const fetchMemberAPI = async () => {
     try {
-        const res = await api.get("task/profile/", {
+        const res = await api.get("api/users/", {
             headers: getAuthHeaders(),
         });
         return res.data;

@@ -6,11 +6,11 @@ import { toast } from "react-toastify";
 const ApprovalMembers = () => {
 
     const [member, setMember] = useState([]);
-    const [location, setLocation] = useState("");
+    const [loading, setLoading] = useState("");
 
     useEffect(() => {
         const fetchData = async () => {
-            setLocation(true)
+            setLoading(true)
             try {
                 const responce = await fetchMemberAPI();
                 setMember(responce);
