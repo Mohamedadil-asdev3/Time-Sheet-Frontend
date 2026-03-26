@@ -15,13 +15,14 @@ const EntityTab = ({ entity, setEntities }) => {
         name: "",
         displayName: "",
         description: "",
+        location: "",
         is_active: true,
     });
 
     // Open modal for Add
     const handleAddEntity = () => {
         setIsEditMode(false);
-        setCurrentEntity({ name: "", displayName: "", description: "", is_active: true });
+        setCurrentEntity({ name: "", displayName: "", description: "", location:"", is_active: true });
         setOpenModal(true);
     };
 
@@ -33,6 +34,7 @@ const EntityTab = ({ entity, setEntities }) => {
             name: data.name || "",
             displayName: data.displayName || "",
             description: data.description || "",
+            location : data.location || "",
             is_active: data.is_active ?? true,
         });
         setOpenModal(true);

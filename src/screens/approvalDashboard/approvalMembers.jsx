@@ -1,6 +1,29 @@
 import { Card, CardContent, Typography, Table, TableHead, TableRow, TableCell, TableBody, Box, Button, TableContainer } from "@mui/material";
+import { useEffect, useState } from "react";
+import { fetchMemberAPI } from "../../Api";
+import { toast } from "react-toastify";
 
 const ApprovalMembers = () => {
+
+    const [member, setMember] = useState([]);
+    const [location, setLocation] = useState("");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLocation(true)
+            try {
+                const responce = await fetchMemberAPI();
+                setMember(responce);
+            } catch (err) {
+                console.error("Failed to load Members:", err);
+                toast.error("Failed to load Members", err)
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     const tableHeader = [
         "S.No",

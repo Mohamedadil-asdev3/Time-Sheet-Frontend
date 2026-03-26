@@ -2,13 +2,62 @@ import { Box, Grid, Typography } from "@mui/material"
 import TaskCountData from "./TaskCountData";
 import DailyTimeline from "./DailyTimeline";
 import TaskTimer from "./TaskTimer";
-import TaskPieChart from "./OverallPiechartData";
-import WeeklyMonthlyBarChart from "./OverallBarChartData";
-import TimeDistributionbyTaskDonutChart from "./OverallDonutChartData";
+import TaskStatusOverview from "./TaskStatusOverview";
+import WorkHoursOverview from "./WorkHoursOverview";
+import TimeDistributionbyTask from "./TimeDistributionbyTask";
 import RecentTasks from "./RecentTask";
 import TopUsedTasks from "./TopTasks";
+import { useEffect, useState } from "react";
+import { fetchDailyTimelineAPI, fetchRecentTasksAPI, fetchTaskStatusOverviewAPI, fetchTimeDistributionByTaskAPI, fetchTopTasksUsedAPI, fetchUserCardCountAPI, fetchWorkHoursOverviewAPI } from "../../Api";
 
 const Dashboard = () => {
+
+    // const [CardCount, setCardCount] = useState("");
+    // const [timeLine, setTimeLine] = useState("");
+    // const [taskStatus, setTaskStatus] = useState("");
+    // const [workHours, setWorkHours] = useState("");
+    // const [timeDistribution, setTimeDistribution] = useState("");
+    // const [RecentTask, setRecentTask] = useState("");
+    // const [topTask, setTopTask] = useState("");
+
+
+    // useEffect(() => {
+    //     const fetchAllData = async () => {
+    //         try {
+
+    //             const [
+    //                 //cardCountRes,
+    //                 //TimelineRes,
+    //                 //taskStatusRes,
+    //                 WorkHoursRes,
+    //                 timeDistributionRes,
+    //                 RecentTaskRes,
+    //                 topTasksRes,
+    //             ] = await Promise.all([
+    //                 //fetchUserCardCountAPI(),
+    //                 //fetchDailyTimelineAPI(),
+    //                 //fetchTaskStatusOverviewAPI(),
+    //                 fetchWorkHoursOverviewAPI(),
+    //                 fetchTimeDistributionByTaskAPI(),
+    //                 fetchRecentTasksAPI(),
+    //                 fetchTopTasksUsedAPI(),
+    //             ]);
+
+    //             //setCardCount(cardCountRes.data || cardCountRes || []);
+    //             //setTimeLine(TimelineRes.data || TimelineRes || []);
+    //             //setTaskStatus(taskStatusRes.data || taskStatusRes || []);
+    //             setWorkHours(WorkHoursRes.data || WorkHoursRes || []);
+    //             setTimeDistribution(timeDistributionRes.data || timeDistributionRes || []);
+    //             setRecentTask(RecentTaskRes.data || RecentTaskRes || []);
+    //             setTopTask(topTasksRes.data || topTasksRes || []);
+    //         } catch (err) {
+    //             console.error("Failed to load settings data:", err);
+    //         }
+    //     };
+
+    //     fetchAllData();
+    // }, []);
+
     return (
         <>
             <Box sx={{ my: 2 }}>
@@ -24,13 +73,13 @@ const Dashboard = () => {
                         <TaskTimer />
                     </Grid>
                     <Grid size={4}>
-                        <TaskPieChart />
+                        <TaskStatusOverview />
                     </Grid>
                     <Grid size={4}>
-                        <WeeklyMonthlyBarChart />
+                        <WorkHoursOverview />
                     </Grid>
                     <Grid size={4}>
-                        <TimeDistributionbyTaskDonutChart />
+                        <TimeDistributionbyTask />
                     </Grid>
                     <Grid size={6}>
                         <RecentTasks />

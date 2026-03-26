@@ -5,7 +5,7 @@ import TodayIcon from "@mui/icons-material/Today";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-const TaskPieChart = () => {
+const TaskStatusOverview = () => {
 
     const taskStats = {
         daily: { total: 20, completed: 10, pending: 5, approved: 3, rejected: 2 },
@@ -103,4 +103,4 @@ const TaskPieChart = () => {
     )
 }
 
-export default TaskPieChart;
+export default TaskStatusOverview;

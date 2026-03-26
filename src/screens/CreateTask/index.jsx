@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import ProfileInfo from "../TaskPage/ProfileInfo";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CancelIcon from '@mui/icons-material/Cancel';
-import { createTaskListAPI, fetchTasksAPI, fetchSubTasksAPI, fetchPlatformsAPI } from "../../Api";
+import { createTaskListAPI, fetchTasksAPI, fetchSubTasksAPI, fetchPlatformsAPI, fetchUserProfileAPI } from "../../Api";
 
 const CreateTask = () => {
 
@@ -22,6 +22,8 @@ const CreateTask = () => {
     const [platforms, setPlatforms] = useState([]);
     const [tasks, setTasks] = useState([]);
     const [subtasks, setSubtasks] = useState([]);
+    const [profileData, setProfileData] = useState(null);
+    console.log("pro", profileData);
     const [loading, setLoading] = useState(false);
     const [loadingOptions, setLoadingOptions] = useState(true);
 
@@ -60,6 +62,24 @@ const CreateTask = () => {
         };
 
         fetchDropdownData();
+    }, []);
+
+    const fetchUserProfileData = async () => {
+        try {
+            setLoading(true);
+            const res = await fetchUserProfileAPI();
+            console.log("profile", res);
+
+            setProfileData(res);
+        } catch (error) {
+            console.log("Failed to load Profile data")
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserProfileData()
     }, []);
 
     const initialFormState = {
@@ -102,89 +122,7 @@ const CreateTask = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // const handleSubmit = async () => {
-    //     if (taskRows.length === 0) {
-    //         toast.warn("Add at least one task before submitting");
-    //         return;
-    //     }
-
-    //     const missingFields = taskRows.some(
-    //         (row) =>
-    //             !row.platform ||
-    //             !row.task ||
-    //             !row.subtask ||
-    //             !row.description?.trim()
-    //     );
-
-    //     if (missingFields) {
-    //         toast.warn("Please complete all required fields in task rows (Platform, Task, Subtask, Description)");
-    //         return;
-    //     }
-
-    //     setLoading(true);
-
-    //     const durationMinutes = taskRows.duration ? (taskRows.duration.hour() * 60 + taskRows.duration.minute()) : 0;
-
-    //     try {
-    //         const payload = {
-    //             tasks: taskRows.map((row) => ({
-    //                 name: "",
-    //                 employeeId: "",
-    //                 entity: "",
-    //                 department: "",
-    //                 location: "",
-    //                 date: form.date.format("YYYY-MM-DD"),
-    //                 platform: row.platform?.id,
-    //                 task: row.task?.id,
-    //                 subtask: row.subtask?.id,
-    //                 bitrisk: row.bitrisk.trim() || null,
-    //                 duration: durationMinutes,
-    //                 description: row.description.trim(),
-    //                 status: 1,
-    //             })),
-    //         };
-
-    //         await createTaskListAPI(payload.tasks);
-
-    //         toast.success(`Successfully created ${taskRows.length} task${taskRows.length > 1 ? "s" : ""}!`);
-    //         toast.success(
-    //             `Task submitted for ${form.entity ?? "Entity"} on ${dayjs(form.date).format("DD MMM YYYY")}`,
-    //             { icon: "✅" }
-    //         );
-
-    //         // Reset form
-    //         setTaskRows([]);
-    //         setForm(initialFormState);
-
-    //         setTimeout(() => navigate("/task"), 1200);
-
-    //         console.log("Task Submitted:", form);
-
-    //     } catch (err) {
-    //         const errorMsg =
-    //             err.response?.data?.detail ||
-    //             err.response?.data?.non_field_errors?.[0] ||
-    //             err.response?.data?.tasks?.[0] ||
-    //             err.message ||
-    //             "Failed to create tasks";
-
-    //         toast.error(errorMsg);
-    //         console.error("Create tasks error:", err);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-    // const handleSave = () => {
-    //     console.log("Draft Saved:", form);
-
-    //     toast.info(
-    //         `Draft saved: ${buildToastMessage()}`,
-    //         { icon: "📝" }
-    //     );
-    // };
-
-    const handleSave = async () => {     // ← make it async
+    const handleSave = async () => {
         if (taskRows.length === 0) {
             toast.warn("Add at least one task before saving");
             return;
@@ -208,11 +146,11 @@ const CreateTask = () => {
         try {
             const payload = {
                 tasks: taskRows.map((row) => ({
-                    name: "",
-                    employeeId: "",
-                    entity: "",
-                    department: "",
-                    location: "",
+                    name: profileData?.name || "",
+                    employeeId: profileData?.employee_id || "",
+                    entity: profileData?.business_unit || "",
+                    department: profileData?.department || "",
+                    location: profileData?.location || "",
                     date: form.date.format("YYYY-MM-DD"),
                     platform: row.platform?.id,
                     task: row.task?.id,
@@ -225,6 +163,8 @@ const CreateTask = () => {
                     status: "2",     // ← changed here
                 })),
             };
+
+            console.log("payload", payload);
 
             await createTaskListAPI(payload.tasks);
 
@@ -274,11 +214,11 @@ const CreateTask = () => {
         try {
             const payload = {
                 tasks: taskRows.map((row) => ({
-                    name: "",
-                    employeeId: "",
-                    entity: "",
-                    department: "",
-                    location: "",
+                    name: profileData?.name || "",
+                    employeeId: profileData?.employee_id || "",
+                    entity: profileData?.business_unit || "",
+                    department: profileData?.department || "",
+                    location: profileData?.location || "",
                     date: form.date.format("YYYY-MM-DD"),
                     platform: row.platform?.id,
                     task: row.task?.id,
@@ -291,6 +231,8 @@ const CreateTask = () => {
                     status: "1",   // ← changed here
                 })),
             };
+
+            console.log("payload", payload);
 
             await createTaskListAPI(payload.tasks);
 
@@ -333,7 +275,7 @@ const CreateTask = () => {
         <>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box>
-                    <ProfileInfo />
+                    <ProfileInfo profileData={profileData} />
                     <Card sx={{ mt: 2 }}>
                         <CardContent>
                             <Box display="flex" justifyContent="space-between" alignItems="center">

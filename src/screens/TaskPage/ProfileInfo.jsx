@@ -4,7 +4,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import BadgeIcon from "@mui/icons-material/Badge";
 
-const ProfileInfo = () => {
+const ProfileInfo = ({ profileData }) => {
 
     const InfoItem = ({ icon, text }) => (
         <Stack direction="row" spacing={1} alignItems="center">
@@ -27,16 +27,16 @@ const ProfileInfo = () => {
                                 border: "4px solid white",
                             }}
                         >
-                            MA
+                            {profileData?.avatar_initials}
                         </Avatar>
                         <Box>
                             <Stack direction="row" alignItems="center" spacing={1}>
                                 <Typography variant="h5" fontWeight={600}>
-                                    Mohamedadil A
+                                    {profileData?.name}
                                 </Typography>
                             </Stack>
                             <Typography variant="body2" color="text.secondary">
-                                Associate Developer
+                                {profileData?.designation}
                             </Typography>
                         </Box>
                     </Box>
@@ -47,36 +47,36 @@ const ProfileInfo = () => {
                             <Typography variant="caption" color="text.secondary">
                                 BUSINESS UNIT
                             </Typography>
-                            <Typography fontSize={14} fontWeight={550}>Stemz Healthcare Pvt Ltd</Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.business_unit || ""}</Typography>
                         </Grid>
                         <Grid size="auto">
                             <Typography variant="caption" color="text.secondary">
                                 DEPARTMENT
                             </Typography>
-                            <Typography fontSize={14} fontWeight={550}>Information Technology</Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.department || ""}</Typography>
                         </Grid>
                         <Grid size="auto">
                             <Typography variant="caption" color="text.secondary">
                                 REPORTING MANAGER
                             </Typography>
                             <Stack direction="row" spacing={1} alignItems="center">
-                                <Avatar sx={{ width: 25, height: 25, fontSize: 13, bgcolor:"primary.main", }}>NR</Avatar>
-                                <Typography fontSize={14} fontWeight={550}>Nandakumar R</Typography>
+                                <Avatar sx={{ width: 25, height: 25, fontSize: 13, bgcolor: "primary.main", }} />
+                                <Typography fontSize={14} fontWeight={550}>{profileData?.manager_name || ""}</Typography>
                             </Stack>
                         </Grid>
                     </Grid>
                     <Grid container columnSpacing={7} rowSpacing={1} mt={0.5}>
                         <Grid size="auto">
-                            <InfoItem icon={<EmailIcon />} text="asdev3@stemzglobal.com" />
+                            <InfoItem icon={<EmailIcon />} text={profileData?.email || ""} />
                         </Grid>
                         <Grid size="auto">
-                            <InfoItem icon={<PhoneIcon />} text="+91-8870977965" />
+                            <InfoItem icon={<PhoneIcon />} text={profileData?.phone || ""} />
                         </Grid>
                         <Grid size="auto">
-                            <InfoItem icon={<LocationOnIcon />} text="Corporate office Chennai" />
+                            <InfoItem icon={<LocationOnIcon />} text={profileData?.location || ""} />
                         </Grid>
                         <Grid size="auto">
-                            <InfoItem icon={<BadgeIcon />} text="20965" />
+                            <InfoItem icon={<BadgeIcon />} text={profileData?.employee_id || ""} />
                         </Grid>
                     </Grid>
                 </Box>

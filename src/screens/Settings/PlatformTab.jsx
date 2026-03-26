@@ -3,12 +3,12 @@ import { useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 
-const LocationTab = ({ location }) => {
+const PlatformTab = ({ platform }) => {
 
     const [search, setSearch] = useState("");
-    const [loading, setLoading] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const TabelHeader = [
         { id: 1, title: "S.No" },
@@ -23,9 +23,9 @@ const LocationTab = ({ location }) => {
         <>
             <Card sx={{ p: 2, borderRadius: 3, boxShadow: 3 }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography fontSize={25} fontWeight={600}>Location Management</Typography>
+                    <Typography fontSize={25} fontWeight={600}>Platform Management</Typography>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                        <Button startIcon={<AddIcon />} variant="contained" size="small" color="primary" >Add Location</Button>
+                        <Button startIcon={<AddIcon />} variant="contained" size="small" color="primary" >Add Platform</Button>
                         <TextField
                             size="small"
                             placeholder="Search..."
@@ -63,14 +63,14 @@ const LocationTab = ({ location }) => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {location?.length === 0 ? (
+                                    {platform?.length === 0 ? (
                                         <TableRow>
                                             <TableCell colSpan={TabelHeader.length} align="center" sx={{ py: 4 }}>
-                                                <Typography color="text.secondary">No Location found</Typography>
+                                                <Typography color="text.secondary">No Platform found</Typography>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
-                                        location?.map((data) => (
+                                        platform?.map((data) => (
                                             <TableRow
                                                 key={data.id}
                                                 hover
@@ -85,9 +85,9 @@ const LocationTab = ({ location }) => {
                                                 <TableCell>{data.description}</TableCell>
                                                 <TableCell>
                                                     <IconButton
-                                                        color="primary"
+                                                        color="warning"
                                                         size="small"
-                                                        //onClick={() => handleEditEntity(data)}
+                                                        onClick={() => handleEditEntity(data)}
                                                     >
                                                         <EditIcon />
                                                     </IconButton>
@@ -119,4 +119,4 @@ const LocationTab = ({ location }) => {
         </>
     )
 }
-export default LocationTab;
+export default PlatformTab;
