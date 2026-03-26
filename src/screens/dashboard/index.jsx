@@ -63,28 +63,28 @@ const Dashboard = () => {
             <Box sx={{ my: 2 }}>
                 <Grid container spacing={1}>
                     <Typography fontSize={20} fontWeight={600}>Welcome to DashBoard 🎉</Typography>
-                    <Grid size={12}>
+                    <Grid size={{ xs: 12, md: 12, lg: 12 }}>
                         <TaskCountData />
                     </Grid>
-                    <Grid size={8}>
+                    <Grid size={{ xs: 12, sm: 8, lg: 8 }}>
                         <DailyTimeline />
                     </Grid>
-                    <Grid size={4}>
+                    <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
                         <TaskTimer />
                     </Grid>
-                    <Grid size={4}>
+                    <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
                         <TaskStatusOverview />
                     </Grid>
-                    <Grid size={4}>
+                    <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
                         <WorkHoursOverview />
                     </Grid>
-                    <Grid size={4}>
+                    <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
                         <TimeDistributionbyTask />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                         <RecentTasks />
                     </Grid>
-                    <Grid size={6}>
+                    <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                         <TopUsedTasks />
                     </Grid>
                 </Grid>
