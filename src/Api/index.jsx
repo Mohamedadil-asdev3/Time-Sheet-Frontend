@@ -1,7 +1,8 @@
 import axios from "axios";
 // export const Media_URL = "http://localhost:8000";
 
-const API_BASE_URL = "http://localhost:8000/";
+//const API_BASE_URL = "http://localhost:8000/";
+const API_BASE_URL = "http://192.168.60.118:8001/";
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -31,7 +32,7 @@ export const loginAPI = async (credentials) => {
         return { access, refresh, user, message, force_change };
     } catch (error) {
         const msg = error.response?.data?.error || error.message || "Login failed";
-        throw new Error(msg);
+        throw msg;
     }
 };
 
@@ -537,7 +538,7 @@ export const fetchTasksListAPI = async () => {
 
 export const getTaskListByIdAPI = async (id) => {
     try {
-        const res = await api.get(`taskslist/${id}/`, {
+        const res = await api.get(`task/taskslist/${id}/`, {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -565,7 +566,7 @@ export const createTaskListAPI = async (payload) => {
 
 export const updateTaskListAPI = async (id, payload) => {
     try {
-        const res = await api.put(`taskslist/${id}/`, payload, {
+        const res = await api.put(`task/taskslist/${id}/`, payload, {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -750,32 +751,33 @@ export const fetchUserProfileAPI = async () => {
 // user dashboard
 export const fetchUserCardCountAPI = async () => {
     try {
-        const res = await api.get("task/profile/", {
+        const res = await api.get("task/tasks/counts/", {
             headers: getAuthHeaders(),
         });
         return res.data;
     } catch (err) {
-        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        console.error("Failed to fetch User Card Data:", err.response?.data || err.message);
         throw err;
     }
 };
 
 export const fetchDailyTimelineAPI = async () => {
     try {
-        const res = await api.get("task/profile/", {
+        const res = await api.get("task/tasks/daily-timeline/", {
             headers: getAuthHeaders(),
         });
         return res.data;
     } catch (err) {
-        console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        console.error("Failed to fetch Daily Time Line:", err.response?.data || err.message);
         throw err;
     }
 };
 
-export const fetchTaskStatusOverviewAPI = async () => {
+export const fetchTaskStatusOverviewAPI = async (params = {}) => {
     try {
-        const res = await api.get("task/profile/", {
+        const res = await api.get("task/tasks/status-overview/", {
             headers: getAuthHeaders(),
+            params: { view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -838,7 +840,7 @@ export const fetchTopTasksUsedAPI = async () => {
 
 export const fetchApprovalCardCountAPI = async () => {
     try {
-        const res = await api.get("task/profile/", {
+        const res = await api.get("task/tasks/counts/", {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -862,7 +864,7 @@ export const fetchTopMenbersAPI = async () => {
 
 export const fetchRecendApprovalAPI = async () => {
     try {
-        const res = await api.get("tasks/approvals/", {
+        const res = await api.get("task/tasks/approvals/", {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -872,10 +874,11 @@ export const fetchRecendApprovalAPI = async () => {
     }
 };
 
-export const fetchTaskStatusOverviewApprovalAPI = async () => {
+export const fetchTaskStatusOverviewApprovalAPI = async (params = {}) => {
     try {
-        const res = await api.get("tasks/approvals/", {
+        const res = await api.get("task/tasks/approval-status-overview/", {
             headers: getAuthHeaders(),
+            params: { view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -884,10 +887,11 @@ export const fetchTaskStatusOverviewApprovalAPI = async () => {
     }
 };
 
-export const fetchTimeDistributionByMemberAPI = async () => {
+export const fetchTimeDistributionByMemberAPI = async (params = {}) => {
     try {
-        const res = await api.get("task/time-distribution/", {
+        const res = await api.get("task/tasks/member/time-distribution/", {
             headers: getAuthHeaders(),
+            params: { view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -896,10 +900,11 @@ export const fetchTimeDistributionByMemberAPI = async () => {
     }
 };
 
-export const fetchTodayTasksAPI = async () => {
+export const fetchTodayTasksAPI = async (params = {}) => {
     try {
-        const res = await api.get("task/profile/", {
+        const res = await api.get("task/tasks/today/completed/", {
             headers: getAuthHeaders(),
+            params: { view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -910,7 +915,7 @@ export const fetchTodayTasksAPI = async () => {
 
 export const fetchTopPlatformAPI = async () => {
     try {
-        const res = await api.get("task/top-platforms/", {
+        const res = await api.get("task/tasks/top-platforms/", {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -922,7 +927,7 @@ export const fetchTopPlatformAPI = async () => {
 
 export const fetchPlatformOverviewAPI = async () => {
     try {
-        const res = await api.get("task/platform-performance/", {
+        const res = await api.get("task/tasks/platform-performance/", {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -934,7 +939,7 @@ export const fetchPlatformOverviewAPI = async () => {
 
 export const fetchMemberAPI = async () => {
     try {
-        const res = await api.get("api/users/", {
+        const res = await api.get("api/approval-members/", {
             headers: getAuthHeaders(),
         });
         return res.data;
@@ -954,6 +959,18 @@ export const fetchApprovalGetAPI = async () => {
         return res.data;
     } catch (err) {
         console.error("Failed to fetch mappings:", err.response?.data || err.message);
+        throw err;
+    }
+};
+
+export const TaskApprovedAndRejectedApi = async (id, payload) => {
+    try {
+        const res = await api.put(`task/tasks/${id}/`, payload, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err?.response?.data || err.message);
         throw err;
     }
 };
