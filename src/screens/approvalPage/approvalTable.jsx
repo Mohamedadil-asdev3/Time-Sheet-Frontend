@@ -848,6 +848,333 @@
 
 // export default ApprovalTable;
 
+// import { useState } from "react";
+// import {
+//     Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent,
+//     DialogTitle, Grid, IconButton, Table, TableBody, TableCell, TableContainer,
+//     TableHead, TableRow, Typography, Divider, Tooltip, Checkbox, Chip
+// } from "@mui/material";
+// import VisibilityIcon from '@mui/icons-material/Visibility';
+// import CloseIcon from '@mui/icons-material/Close';
+// import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+// import CancelIcon from '@mui/icons-material/Cancel';
+// import dayjs from "dayjs";
+// import { toast } from "react-toastify";
+// import { TaskApprovedAndRejectedApi } from "../../Api";
+
+// const TaskTableSection = ({ title, count, color, rows, onViewTask }) => (
+//     <Card sx={{ borderRadius: 3, mb: 3, boxShadow: "0 2px 10px rgba(0,0,0,0.04)" }}>
+//         <Box p={2.5}>
+//             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 2 }}>
+//                 <Box display="flex" alignItems="center" gap={1}>
+//                     <Chip
+//                         label={`${title} (${count})`}
+//                         size="small"
+//                         sx={{ bgcolor: color || "#424242", color: "#fff", fontWeight: 600, fontSize: "13px" }}
+//                     />
+//                 </Box>
+//                 {count > 0 && (
+//                     <Typography variant="body2" color="primary" sx={{ cursor: "pointer", fontWeight: 500 }}>
+//                         View All →
+//                     </Typography>
+//                 )}
+//             </Box>
+
+//             {rows.length > 0 ? (
+//                 <Table size="small">
+//                     <TableHead>
+//                         <TableRow>
+//                             <TableCell>S.No</TableCell>
+//                             <TableCell>Task Owner</TableCell>
+//                             <TableCell>Role</TableCell>
+//                             <TableCell>Department</TableCell>
+//                             <TableCell>Location</TableCell>
+//                             <TableCell>Date</TableCell>
+//                             <TableCell align="center">Action</TableCell>
+//                         </TableRow>
+//                     </TableHead>
+//                     <TableBody>
+//                         {rows.map((row, index) => (
+//                             <TableRow key={index} hover>
+//                                 <TableCell>{index + 1}</TableCell>
+//                                 <TableCell>{row.owner || "N/A"}</TableCell>
+//                                 <TableCell>{row.role || "N/A"}</TableCell>
+//                                 <TableCell>{row.department || "N/A"}</TableCell>
+//                                 <TableCell>{row.location || "N/A"}</TableCell>
+//                                 <TableCell>{row.date || "N/A"}</TableCell>
+//                                 <TableCell align="center">
+//                                     <IconButton size="small" color="primary" onClick={() => onViewTask(row)}>
+//                                         <VisibilityIcon />
+//                                     </IconButton>
+//                                 </TableCell>
+//                             </TableRow>
+//                         ))}
+//                     </TableBody>
+//                 </Table>
+//             ) : (
+//                 <Box sx={{ py: 4, textAlign: "center" }}>
+//                     <Typography variant="body2" color="text.secondary">
+//                         No {title.toLowerCase()} tasks at the moment
+//                     </Typography>
+//                 </Box>
+//             )}
+//         </Box>
+//     </Card>
+// );
+
+// const ApprovalTable = ({ approvalData = [] }) => {
+//     const [openDialog, setOpenDialog] = useState(false);
+//     const [selectedRow, setSelectedRow] = useState(null);
+//     const [selectedTasks, setSelectedTasks] = useState(new Set());
+//     const [actionLoading, setActionLoading] = useState(false);
+
+//     const statusColors = {
+//         "Submitted": "#2196F3",
+//         "Approved": "#4CAF50",
+//         "Rejected": "#F44336",
+//         "Completed": "#9C27B0",
+//         "Draft": "#FF9800",
+//     };
+
+//     const handleViewTask = (row) => {
+//         setSelectedRow(row);
+//         setSelectedTasks(new Set()); // Reset selection
+//         setOpenDialog(true);
+//     };
+
+//     const handleCloseDialog = () => {
+//         setOpenDialog(false);
+//         setSelectedRow(null);
+//         setSelectedTasks(new Set());
+//     };
+
+//     // Toggle individual checkbox
+//     const handleCheckboxChange = (taskId) => {
+//         setSelectedTasks(prev => {
+//             const newSet = new Set(prev);
+//             if (newSet.has(taskId)) newSet.delete(taskId);
+//             else newSet.add(taskId);
+//             return newSet;
+//         });
+//     };
+
+//     // Select All / Deselect All
+//     const handleSelectAll = () => {
+//         if (!selectedRow?.tasks) return;
+
+//         setSelectedTasks(prev => {
+//             const currentCount = prev.size;
+//             const totalTasks = selectedRow.tasks.length;
+
+//             if (currentCount === totalTasks) {
+//                 return new Set(); // Deselect all
+//             } else {
+//                 return new Set(selectedRow.tasks.map(task => task.id)); // Select all
+//             }
+//         });
+//     };
+
+//     // Single task action (from icon)
+//     const handleSingleAction = async (taskId, action) => {
+//         if (!taskId) return;
+//         await performAction([taskId], action);
+//     };
+
+//     // Bulk action (from bottom buttons)
+//     const handleBulkAction = async (action) => {
+//         if (selectedTasks.size === 0) return;
+//         await performAction(Array.from(selectedTasks), action);
+//     };
+
+//     // Common API call function
+//     const performAction = async (taskIds, action) => {
+//         setActionLoading(true);
+//         try {
+//             for (const id of taskIds) {
+//                 await TaskApprovedAndRejectedApi(id, action);
+//             }
+
+//             toast.success(`${taskIds.length} task(s) ${action === 'approve' ? 'Approved' : 'Rejected'} successfully!`);
+//             handleCloseDialog();
+
+//         } catch (err) {
+//             console.error("Action failed:", err);
+//             toast.error(err.response?.data?.detail || `Failed to ${action} task(s)`);
+//         } finally {
+//             setActionLoading(false);
+//         }
+//     };
+
+//     const sections = approvalData?.length > 0 ? approvalData : [
+//         { title: "Submitted", count: 0, rows: [] },
+//         { title: "Approved", count: 0, rows: [] },
+//         { title: "Rejected", count: 0, rows: [] },
+//         { title: "Completed", count: 0, rows: [] },
+//     ];
+
+//     return (
+//         <Box sx={{ p: 3, bgcolor: "#f5f6f8", minHeight: "100%" }}>
+//             {sections.map((section, index) => (
+//                 <TaskTableSection
+//                     key={index}
+//                     title={section.title}
+//                     count={section.count || 0}
+//                     color={statusColors[section.title] || "#424242"}
+//                     rows={section.rows || []}
+//                     onViewTask={handleViewTask}
+//                 />
+//             ))}
+
+//             {/* ====================== TASK DETAIL DIALOG ====================== */}
+//             <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
+//                 <DialogTitle sx={{ bgcolor: "#1976d2", color: "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+//                     Task Details - {selectedRow?.owner?.split('/')[0] || "User"}
+//                     <IconButton onClick={handleCloseDialog} sx={{ color: "white" }}>
+//                         <CloseIcon />
+//                     </IconButton>
+//                 </DialogTitle>
+
+//                 <DialogContent dividers sx={{ p: 0 }}>
+//                     {selectedRow && (
+//                         <>
+//                             {/* Owner Info */}
+//                             <Box sx={{ p: 3, bgcolor: "#f8f9fa", borderBottom: "1px solid #eee" }}>
+//                                 <Typography variant="h6">{selectedRow.owner}</Typography>
+//                                 <Typography variant="body2" color="text.secondary">
+//                                     {selectedRow.role} • {selectedRow.department || "N/A"} • {selectedRow.location}
+//                                 </Typography>
+//                                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+//                                     Date: {selectedRow.date}
+//                                 </Typography>
+//                             </Box>
+
+//                             {/* Tasks Table */}
+//                             <Box sx={{ p: 3 }}>
+//                                 <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+//                                     Tasks ({selectedRow.tasks?.length || 0})
+//                                 </Typography>
+
+//                                 <Table size="small">
+//                                     <TableHead>
+//                                         <TableRow>
+//                                             <TableCell padding="checkbox">
+//                                                 <Checkbox
+//                                                     indeterminate={
+//                                                         selectedTasks.size > 0 &&
+//                                                         selectedTasks.size < (selectedRow.tasks?.length || 0)
+//                                                     }
+//                                                     checked={
+//                                                         selectedRow.tasks?.length > 0 &&
+//                                                         selectedTasks.size === selectedRow.tasks.length
+//                                                     }
+//                                                     onChange={handleSelectAll}
+//                                                 />
+//                                             </TableCell>
+//                                             <TableCell><strong>S.No</strong></TableCell>
+//                                             <TableCell><strong>Platform</strong></TableCell>
+//                                             <TableCell><strong>Task</strong></TableCell>
+//                                             <TableCell><strong>Sub Task</strong></TableCell>
+//                                             <TableCell><strong>Duration</strong></TableCell>
+//                                             <TableCell><strong>Description</strong></TableCell>
+//                                             <TableCell><strong>Status</strong></TableCell>
+//                                             <TableCell align="center"><strong>Quick Action</strong></TableCell>
+//                                         </TableRow>
+//                                     </TableHead>
+//                                     <TableBody>
+//                                         {selectedRow.tasks?.map((task, idx) => (
+//                                             <TableRow key={idx}>
+//                                                 <TableCell padding="checkbox">
+//                                                     <Checkbox
+//                                                         checked={selectedTasks.has(task.id)}
+//                                                         onChange={() => handleCheckboxChange(task.id)}
+//                                                         size="small"
+//                                                     />
+//                                                 </TableCell>
+//                                                 <TableCell>{idx + 1}</TableCell>
+//                                                 <TableCell>{task.platform}</TableCell>
+//                                                 <TableCell>{task.task_name}</TableCell>
+//                                                 <TableCell>{task.subtask_name}</TableCell>
+//                                                 <TableCell><strong>{task.duration}</strong></TableCell>
+//                                                 <TableCell sx={{ maxWidth: 280, whiteSpace: "pre-wrap" }}>
+//                                                     {task.description || "—"}
+//                                                 </TableCell>
+//                                                 <TableCell>
+//                                                     <Chip
+//                                                         label={task.status}
+//                                                         size="small"
+//                                                         color={
+//                                                             ["completed", "approved"].includes(task.status?.toLowerCase())
+//                                                                 ? "success"
+//                                                                 : task.status?.toLowerCase() === "submited"
+//                                                                     ? "info"
+//                                                                     : "default"
+//                                                         }
+//                                                     />
+//                                                 </TableCell>
+//                                                 <TableCell align="center">
+//                                                     <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+//                                                         <Tooltip title="Approve">
+//                                                             <IconButton
+//                                                                 color="success"
+//                                                                 size="small"
+//                                                                 onClick={() => handleSingleAction(task.id, 'approve')}
+//                                                                 disabled={actionLoading}
+//                                                             >
+//                                                                 <CheckCircleIcon />
+//                                                             </IconButton>
+//                                                         </Tooltip>
+//                                                         <Tooltip title="Reject">
+//                                                             <IconButton
+//                                                                 color="error"
+//                                                                 size="small"
+//                                                                 onClick={() => handleSingleAction(task.id, 'reject')}
+//                                                                 disabled={actionLoading}
+//                                                             >
+//                                                                 <CancelIcon />
+//                                                             </IconButton>
+//                                                         </Tooltip>
+//                                                     </Box>
+//                                                 </TableCell>
+//                                             </TableRow>
+//                                         ))}
+//                                     </TableBody>
+//                                 </Table>
+//                             </Box>
+
+//                             {/* Bulk Action Buttons */}
+//                             {selectedTasks.size > 0 && (
+//                                 <Box sx={{ p: 3, bgcolor: "#f8f9fa", borderTop: "1px solid #eee", display: "flex", gap: 2, justifyContent: "flex-end" }}>
+//                                     <Button
+//                                         variant="outlined"
+//                                         color="error"
+//                                         startIcon={<CancelIcon />}
+//                                         onClick={() => handleBulkAction('reject')}
+//                                         disabled={actionLoading}
+//                                     >
+//                                         Reject Selected ({selectedTasks.size})
+//                                     </Button>
+//                                     <Button
+//                                         variant="contained"
+//                                         color="success"
+//                                         startIcon={<CheckCircleIcon />}
+//                                         onClick={() => handleBulkAction('approve')}
+//                                         disabled={actionLoading}
+//                                     >
+//                                         Approve Selected ({selectedTasks.size})
+//                                     </Button>
+//                                 </Box>
+//                             )}
+//                         </>
+//                     )}
+//                 </DialogContent>
+//             </Dialog>
+//         </Box>
+//     );
+// };
+
+// export default ApprovalTable;
+
+
 import { useState } from "react";
 import {
     Box, Button, Card, CardContent, Dialog, DialogActions, DialogContent,
@@ -922,7 +1249,7 @@ const TaskTableSection = ({ title, count, color, rows, onViewTask }) => (
     </Card>
 );
 
-const ApprovalTable = ({ approvalData = [] }) => {
+const ApprovalTable = ({ approvalData = [], refreshData }) => {
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedRow, setSelectedRow] = useState(null);
     const [selectedTasks, setSelectedTasks] = useState(new Set());
@@ -938,7 +1265,7 @@ const ApprovalTable = ({ approvalData = [] }) => {
 
     const handleViewTask = (row) => {
         setSelectedRow(row);
-        setSelectedTasks(new Set()); // Reset selection
+        setSelectedTasks(new Set());
         setOpenDialog(true);
     };
 
@@ -948,58 +1275,83 @@ const ApprovalTable = ({ approvalData = [] }) => {
         setSelectedTasks(new Set());
     };
 
-    // Toggle individual checkbox
+    // Determine correct action string based on L1 or L2
+    const getActionString = (task, actionType) => {
+        const approverLevel = task?.approver_level === "L1" ? "L1" : "L2";
+
+        return actionType === 'approve'
+            ? `${approverLevel}_APPROVE`
+            : `${approverLevel}_REJECT`;
+    };
+
+    // Toggle checkbox
     const handleCheckboxChange = (taskId) => {
         setSelectedTasks(prev => {
             const newSet = new Set(prev);
-            if (newSet.has(taskId)) newSet.delete(taskId);
-            else newSet.add(taskId);
+            newSet.has(taskId) ? newSet.delete(taskId) : newSet.add(taskId);
             return newSet;
         });
     };
 
-    // Select All / Deselect All
+    // Select All
     const handleSelectAll = () => {
         if (!selectedRow?.tasks) return;
+        const allIds = new Set(selectedRow.tasks.map(t => t.id));
 
-        setSelectedTasks(prev => {
-            const currentCount = prev.size;
-            const totalTasks = selectedRow.tasks.length;
+        setSelectedTasks(prev =>
+            prev.size === selectedRow.tasks.length ? new Set() : allIds
+        );
+    };
 
-            if (currentCount === totalTasks) {
-                return new Set(); // Deselect all
-            } else {
-                return new Set(selectedRow.tasks.map(task => task.id)); // Select all
+
+    // Single action (from icon)
+    const handleSingleAction = async (task, actionType) => {
+        if (!task?.id) return;
+
+        const actionString = getActionString(task, actionType);
+        setActionLoading(true);
+
+        try {
+            await TaskApprovedAndRejectedApi(task.id, { action: actionString });
+            toast.success(`Task ${actionType === 'approve' ? 'Approved' : 'Rejected'} successfully!`);
+
+            // Refresh data after successful action
+            if (typeof refreshData === "function") {
+                refreshData();
             }
-        });
+
+            handleCloseDialog();
+        } catch (err) {
+            toast.error(err.response?.data?.detail || `Failed to ${actionType} task`);
+        } finally {
+            setActionLoading(false);
+        }
     };
 
-    // Single task action (from icon)
-    const handleSingleAction = async (taskId, action) => {
-        if (!taskId) return;
-        await performAction([taskId], action);
-    };
-
-    // Bulk action (from bottom buttons)
-    const handleBulkAction = async (action) => {
+    // Bulk action
+    const handleBulkAction = async (actionType) => {
         if (selectedTasks.size === 0) return;
-        await performAction(Array.from(selectedTasks), action);
-    };
 
-    // Common API call function
-    const performAction = async (taskIds, action) => {
         setActionLoading(true);
         try {
-            for (const id of taskIds) {
-                await TaskApprovedAndRejectedApi(id, action);
+            for (const taskId of selectedTasks) {
+                const task = selectedRow.tasks.find(t => t.id === taskId);
+                if (task) {
+                    const actionString = getActionString(task, actionType);
+                    await TaskApprovedAndRejectedApi(task.id, { action: actionString });
+                }
             }
 
-            toast.success(`${taskIds.length} task(s) ${action === 'approve' ? 'Approved' : 'Rejected'} successfully!`);
-            handleCloseDialog();
+            toast.success(`${selectedTasks.size} task(s) ${actionType === 'approve' ? 'Approved' : 'Rejected'} successfully!`);
 
+            // Refresh data after successful action
+            if (typeof refreshData === "function") {
+                refreshData();
+            }
+
+            handleCloseDialog();
         } catch (err) {
-            console.error("Action failed:", err);
-            toast.error(err.response?.data?.detail || `Failed to ${action} task(s)`);
+            toast.error(`Failed to ${actionType} selected tasks`);
         } finally {
             setActionLoading(false);
         }
@@ -1025,7 +1377,7 @@ const ApprovalTable = ({ approvalData = [] }) => {
                 />
             ))}
 
-            {/* ====================== TASK DETAIL DIALOG ====================== */}
+            {/* TASK DETAIL DIALOG */}
             <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
                 <DialogTitle sx={{ bgcolor: "#1976d2", color: "white", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     Task Details - {selectedRow?.owner?.split('/')[0] || "User"}
@@ -1037,7 +1389,6 @@ const ApprovalTable = ({ approvalData = [] }) => {
                 <DialogContent dividers sx={{ p: 0 }}>
                     {selectedRow && (
                         <>
-                            {/* Owner Info */}
                             <Box sx={{ p: 3, bgcolor: "#f8f9fa", borderBottom: "1px solid #eee" }}>
                                 <Typography variant="h6">{selectedRow.owner}</Typography>
                                 <Typography variant="body2" color="text.secondary">
@@ -1048,7 +1399,6 @@ const ApprovalTable = ({ approvalData = [] }) => {
                                 </Typography>
                             </Box>
 
-                            {/* Tasks Table */}
                             <Box sx={{ p: 3 }}>
                                 <Typography variant="subtitle1" fontWeight={600} gutterBottom>
                                     Tasks ({selectedRow.tasks?.length || 0})
@@ -1059,14 +1409,8 @@ const ApprovalTable = ({ approvalData = [] }) => {
                                         <TableRow>
                                             <TableCell padding="checkbox">
                                                 <Checkbox
-                                                    indeterminate={
-                                                        selectedTasks.size > 0 &&
-                                                        selectedTasks.size < (selectedRow.tasks?.length || 0)
-                                                    }
-                                                    checked={
-                                                        selectedRow.tasks?.length > 0 &&
-                                                        selectedTasks.size === selectedRow.tasks.length
-                                                    }
+                                                    indeterminate={selectedTasks.size > 0 && selectedTasks.size < (selectedRow.tasks?.length || 0)}
+                                                    checked={selectedRow.tasks?.length > 0 && selectedTasks.size === selectedRow.tasks.length}
                                                     onChange={handleSelectAll}
                                                 />
                                             </TableCell>
@@ -1077,7 +1421,7 @@ const ApprovalTable = ({ approvalData = [] }) => {
                                             <TableCell><strong>Duration</strong></TableCell>
                                             <TableCell><strong>Description</strong></TableCell>
                                             <TableCell><strong>Status</strong></TableCell>
-                                            <TableCell align="center"><strong>Quick Action</strong></TableCell>
+                                            <TableCell align="center"><strong>Action</strong></TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -1103,21 +1447,18 @@ const ApprovalTable = ({ approvalData = [] }) => {
                                                         label={task.status}
                                                         size="small"
                                                         color={
-                                                            ["completed", "approved"].includes(task.status?.toLowerCase())
-                                                                ? "success"
-                                                                : task.status?.toLowerCase() === "submited"
-                                                                    ? "info"
-                                                                    : "default"
+                                                            ["completed", "approved"].includes(task.status?.toLowerCase()) ? "success" :
+                                                                task.status?.toLowerCase() === "submited" ? "info" : "default"
                                                         }
                                                     />
                                                 </TableCell>
                                                 <TableCell align="center">
-                                                    <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'center' }}>
+                                                    <Box sx={{ display: 'flex', gap: 0.5 }}>
                                                         <Tooltip title="Approve">
                                                             <IconButton
                                                                 color="success"
                                                                 size="small"
-                                                                onClick={() => handleSingleAction(task.id, 'approve')}
+                                                                onClick={() => handleSingleAction(task, 'approve')}
                                                                 disabled={actionLoading}
                                                             >
                                                                 <CheckCircleIcon />
@@ -1127,7 +1468,7 @@ const ApprovalTable = ({ approvalData = [] }) => {
                                                             <IconButton
                                                                 color="error"
                                                                 size="small"
-                                                                onClick={() => handleSingleAction(task.id, 'reject')}
+                                                                onClick={() => handleSingleAction(task, 'reject')}
                                                                 disabled={actionLoading}
                                                             >
                                                                 <CancelIcon />
@@ -1141,7 +1482,6 @@ const ApprovalTable = ({ approvalData = [] }) => {
                                 </Table>
                             </Box>
 
-                            {/* Bulk Action Buttons */}
                             {selectedTasks.size > 0 && (
                                 <Box sx={{ p: 3, bgcolor: "#f8f9fa", borderTop: "1px solid #eee", display: "flex", gap: 2, justifyContent: "flex-end" }}>
                                     <Button

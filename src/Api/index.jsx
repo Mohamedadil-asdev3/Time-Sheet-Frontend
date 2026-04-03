@@ -967,7 +967,20 @@ export const fetchApprovalGetAPI = async () => {
 
 export const TaskApprovedAndRejectedApi = async (id, payload) => {
     try {
-        const res = await api.put(`task/tasks/${id}/`, payload, {
+        const res = await api.post(`task/tasks/${id}/action/`, payload, {
+            headers: getAuthHeaders(),
+        });
+        return res.data;
+    } catch (err) {
+        console.error("Failed to fetch mappings:", err?.response?.data || err.message);
+        throw err;
+    }
+};
+
+
+export const TaskBulkApprovedAndRejectedApi = async (payload) => {
+    try {
+        const res = await api.post(`task/bulkapproval/`, payload, {
             headers: getAuthHeaders(),
         });
         return res.data;

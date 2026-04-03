@@ -16,23 +16,27 @@ const ApprovalPage = () => {
     const [OpenFilter, setOpenFilter] = useState(false);
     const [selectedTab, setSelectedTab] = useState("table");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetchApprovalGetAPI();
-                setApprovalData(response);
-            } catch (err) {
-                console.error("Failed to load Approval Data:", err);
-                toast.error("Failed to load Approval Daata");
-                setApprovalData(null);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetchApprovalGetAPI();
+            setApprovalData(response);
+        } catch (err) {
+            console.error("Failed to load Approval Data:", err);
+            toast.error("Failed to load Approval Daata");
+            setApprovalData(null);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, []);
+
+    const handleRefresh = () => {
+        fetchData();
+    };
 
     const users = ["Mohamedadil", "Venkat", "Dhanush"];
 
@@ -42,7 +46,7 @@ const ApprovalPage = () => {
     ];
 
     const tabComponents = {
-        table: <ApprovalTable approvalData={approvalData} />,
+        table: <ApprovalTable approvalData={approvalData} refreshData={handleRefresh} />,
         card: <ApprovalCard approvalData={approvalData} />,
     };
 
