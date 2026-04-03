@@ -2,7 +2,9 @@ import axios from "axios";
 // export const Media_URL = "http://localhost:8000";
 
 //const API_BASE_URL = "http://localhost:8000/";
-const API_BASE_URL = "http://192.168.60.118:8001/";
+//const API_BASE_URL = "http://192.168.60.149:8000/"; // danush port
+const API_BASE_URL = "http://192.168.60.118:8001/"; // venkat port
+
 
 const api = axios.create({
     baseURL: API_BASE_URL,
