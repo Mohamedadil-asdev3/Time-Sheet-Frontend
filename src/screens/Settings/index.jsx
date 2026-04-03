@@ -191,6 +191,61 @@ const Settings = () => {
         }
     }, [selectedTab]); // Re-run when tab changes
 
+
+    // // Fetch all data once on mount
+    // useEffect(() => {
+    //     const fetchAllData = async () => {
+    //         try {
+    //             //setLoading(true);
+    //             //setError(null);
+
+    //             const [
+    //                 entitiesRes,
+    //                 locationsRes,
+    //                 departmentsRes,
+    //                 UserRes,
+    //                 tasksRes,
+    //                 subTasksRes,
+    //                 rolesRes,
+    //                 HolidayRes,
+    //                 EmailRes,
+    //                 platformRes,
+    //             ] = await Promise.all([
+    //                 fetchEntitiesAPI(),
+    //                 fetchLocationsAPI(),
+    //                 fetchDepartmentsAPI(),
+    //                 fetchUsersAPI(),
+    //                 fetchTasksAPI(),
+    //                 fetchSubTasksAPI(),
+    //                 fetchRolesAPI(),
+    //                 fetchHolidayAPI(),
+    //                 fetchEmailAPI(),
+    //                 fetchPlatformsAPI(),
+    //             ]);
+
+    //             // Assuming each API returns { data: [...] } or direct array
+    //             setEntities(entitiesRes.data || entitiesRes || []);
+    //             setLocations(locationsRes.data || locationsRes || []);
+    //             setDepartments(departmentsRes.data || departmentsRes || []);
+    //             setUser(UserRes.data || UserRes || []);
+    //             setTasks(tasksRes.data || tasksRes || []);
+    //             setSubTasks(subTasksRes.data || subTasksRes || []);
+    //             setRoles(rolesRes.data || rolesRes || []);
+    //             setHoliday(HolidayRes.data || HolidayRes || []);
+    //             setEmail(EmailRes.data || EmailRes || []);
+    //             setPlatform(platformRes.data || platformRes || []);
+
+    //         } catch (err) {
+    //             console.error("Failed to load settings data:", err);
+    //             setError("Failed to load data. Please try again later.");
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchAllData();
+    // }, []);
+
     const tabs = [
         { id: "entity", label: "Entity", icon: <BusinessIcon /> },
         { id: "location", label: "Location", icon: <LocationOnIcon /> },
@@ -203,6 +258,19 @@ const Settings = () => {
         { id: "holidayCalender", label: "Holiday Calender", icon: <EventNoteIcon /> },
         { id: "emailTemplate", label: "Email Template", icon: <EmailIcon /> },
     ];
+
+    // const tabComponents = {
+    //     entity: <EntityTab entity={entities} setEntities={setEntities} />,
+    //     location: <LocationTab location={locations} />,
+    //     department: <DepartmentTab department={departments} />,
+    //     user: <UserTabs user={user} />,
+    //     role: <RoleTab role={roles} />,
+    //     task: <TaskTab tasks={tasks} />,
+    //     subTask: <SubTaskTab subTasks={subTasks} />,
+    //     platform: <PlatformTab platform={platform} />,
+    //     holidayCalender: <HolidayCalenderTab holiday={holiday} />,
+    //     emailTemplate: <EmailTemplateTab email={email} />,
+    // };
 
     const renderTabContent = () => {
         if (loading) {
@@ -295,6 +363,11 @@ const Settings = () => {
                 </Grid>
                 <Grid size={12}>
                     <Box>
+                        {/* {tabComponents[selectedTab] || (
+                            <Typography color="text.secondary">
+                                Select a tab to view content
+                            </Typography>
+                        )} */}
                         {renderTabContent()}
                     </Box>
                 </Grid>

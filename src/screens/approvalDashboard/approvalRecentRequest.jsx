@@ -1,32 +1,11 @@
 import { Card, CardContent, Typography, Avatar, IconButton, Box, Button } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { fetchRecendApprovalAPI } from "../../Api";
+import { useState } from "react";
 
 const ApprovalRecentRequests = () => {
 
-    const [recendApproval, setRecendApproval] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true)
-            try {
-                const responce = await fetchRecendApprovalAPI();
-                setRecendApproval(responce);
-            } catch (err) {
-                console.error("Failed to load Recent Approval:", err);
-                toast.error("Failed to load Recent Approval", err)
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchData();
-    }, []);
-
+    const [recendApproval, setRecendApproval] = useState("")
 
     const requests = [
         { name: "Jonathan King", time: "01:00 PM - 01:20 PM" },

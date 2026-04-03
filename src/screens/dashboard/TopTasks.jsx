@@ -183,7 +183,7 @@ const TopUsedTasks = () => {
                                                 {index + 1}. {item.task || item.task_name || "Unnamed Task"}
                                             </Typography>
                                             <Typography fontSize={13} color="text.secondary" fontWeight={500}>
-                                                {item.hours}
+                                                {item.hours}h
                                             </Typography>
                                         </Box>
 

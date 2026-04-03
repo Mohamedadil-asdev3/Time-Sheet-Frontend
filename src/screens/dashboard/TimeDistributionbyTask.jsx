@@ -218,7 +218,7 @@ const TimeDistributionbyTask = () => {
     };
 
     return (
-        <Card sx={{ borderRadius: 4, boxShadow: "0 12px 30px rgba(0,0,0,0.12)", minHeight: 400, minWidth: 400, height: "100%" }}>
+        <Card sx={{ borderRadius: 4, boxShadow: "0 12px 30px rgba(0,0,0,0.12)", minHeight: 425, minWidth: 400, height: "100%" }}>
             <CardContent>
                 {/* Header */}
                 <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>

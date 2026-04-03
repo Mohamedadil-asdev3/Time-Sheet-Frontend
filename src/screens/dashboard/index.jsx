@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Box, Grid, IconButton, Typography } from "@mui/material"
+import { Box, Grid, Typography } from "@mui/material"
 import TaskCountData from "./TaskCountData";
 import DailyTimeline from "./DailyTimeline";
 import TaskTimer from "./TaskTimer";
@@ -8,89 +7,70 @@ import WorkHoursOverview from "./WorkHoursOverview";
 import TimeDistributionbyTask from "./TimeDistributionbyTask";
 import RecentTasks from "./RecentTask";
 import TopUsedTasks from "./TopTasks";
+import { useEffect, useState } from "react";
 import { fetchDailyTimelineAPI, fetchRecentTasksAPI, fetchTaskStatusOverviewAPI, fetchTimeDistributionByTaskAPI, fetchTopTasksUsedAPI, fetchUserCardCountAPI, fetchWorkHoursOverviewAPI } from "../../Api";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import FilterAltOffIcon from "@mui/icons-material/FilterAltOff";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
 
 const Dashboard = () => {
 
-    const [showFilters, setShowFilters] = useState(false);
-    const [startDate, setStartDate] = useState(null);
-    const [endDate, setEndDate] = useState(null);
+    // const [CardCount, setCardCount] = useState("");
+    // const [timeLine, setTimeLine] = useState("");
+    // const [taskStatus, setTaskStatus] = useState("");
+    // const [workHours, setWorkHours] = useState("");
+    // const [timeDistribution, setTimeDistribution] = useState("");
+    // const [RecentTask, setRecentTask] = useState("");
+    // const [topTask, setTopTask] = useState("");
+
+
+    // useEffect(() => {
+    //     const fetchAllData = async () => {
+    //         try {
+
+    //             const [
+    //                 //cardCountRes,
+    //                 //TimelineRes,
+    //                 //taskStatusRes,
+    //                 WorkHoursRes,
+    //                 timeDistributionRes,
+    //                 RecentTaskRes,
+    //                 topTasksRes,
+    //             ] = await Promise.all([
+    //                 //fetchUserCardCountAPI(),
+    //                 //fetchDailyTimelineAPI(),
+    //                 //fetchTaskStatusOverviewAPI(),
+    //                 fetchWorkHoursOverviewAPI(),
+    //                 fetchTimeDistributionByTaskAPI(),
+    //                 fetchRecentTasksAPI(),
+    //                 fetchTopTasksUsedAPI(),
+    //             ]);
+
+    //             //setCardCount(cardCountRes.data || cardCountRes || []);
+    //             //setTimeLine(TimelineRes.data || TimelineRes || []);
+    //             //setTaskStatus(taskStatusRes.data || taskStatusRes || []);
+    //             setWorkHours(WorkHoursRes.data || WorkHoursRes || []);
+    //             setTimeDistribution(timeDistributionRes.data || timeDistributionRes || []);
+    //             setRecentTask(RecentTaskRes.data || RecentTaskRes || []);
+    //             setTopTask(topTasksRes.data || topTasksRes || []);
+    //         } catch (err) {
+    //             console.error("Failed to load settings data:", err);
+    //         }
+    //     };
+
+    //     fetchAllData();
+    // }, []);
 
     return (
         <>
-            <Box >
+            <Box sx={{ my: 2 }}>
                 <Grid container spacing={1}>
-                    <Grid size={{ xs: 12, sm: 12, md: 12, lg: 12 }}>
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: 60, width: "100%", background: "linear-gradient(135deg, #667eea, #764ba2)", color: "#fff", }}>
-                            <Typography fontSize={22} fontWeight={600} mr={2}>Dashboard</Typography>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                                {showFilters && (
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <Box sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 2,
-
-                                            padding: '8px 16px',
-                                            borderRadius: 2
-                                        }}>
-                                            <DatePicker
-                                                label="Start Date"
-                                                value={startDate}
-                                                onChange={(newValue) => setStartDate(newValue)}
-                                                slotProps={{
-                                                    textField: {
-                                                        size: "small",
-                                                        sx: {
-                                                            width: 160,
-                                                            '& .MuiInputBase-root': {
-                                                                color: '#fff',
-                                                                '& fieldset': { borderColor: 'rgba(255,255,255,0.5)' }
-                                                            },
-                                                            '& .MuiInputLabel-root': { color: '#fff' }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-
-                                            <DatePicker
-                                                label="End Date"
-                                                value={endDate}
-                                                onChange={(newValue) => setEndDate(newValue)}
-                                                slotProps={{
-                                                    textField: {
-                                                        size: "small",
-                                                        sx: {
-                                                            width: 160,
-                                                            '& .MuiInputBase-root': {
-                                                                color: '#fff',
-                                                                '& fieldset': { borderColor: 'rgba(255,255,255,0.5)' }
-                                                            },
-                                                            '& .MuiInputLabel-root': { color: '#fff' }
-                                                        }
-                                                    }
-                                                }}
-                                            />
-                                        </Box>
-                                    </LocalizationProvider>
-                                )}
-                                <IconButton onClick={() => setShowFilters(!showFilters)} sx={{ backgroundColor: showFilters ? 'rgba(255,255,255,0.2)' : 'transparent', '&:hover': { backgroundColor: 'rgba(255,255,255,0.3)' } }}>
-                                    {showFilters ? <FilterAltOffIcon sx={{ fontSize: 28, color: "#fff" }} /> : <FilterAltIcon sx={{ fontSize: 28, color: "#fff" }} />}
-                                </IconButton>
-                            </Box>
-                        </Box>
-                    </Grid>
-
+                    <Typography fontSize={20} fontWeight={600}>Welcome to DashBoard 🎉</Typography>
                     <Grid size={{ xs: 12, md: 12, lg: 12 }}>
                         <TaskCountData />
                     </Grid>
-                    <Grid size={{ xs: 12, sm: 8, lg: 12 }}>
+                    <Grid size={{ xs: 12, sm: 8, lg: 8 }}>
                         <DailyTimeline />
+                    </Grid>
+                    <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
+                        <TaskTimer />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
                         <TaskStatusOverview />
@@ -108,7 +88,7 @@ const Dashboard = () => {
                         <TopUsedTasks />
                     </Grid>
                 </Grid>
-            </Box >
+            </Box>
 
         </>
     )

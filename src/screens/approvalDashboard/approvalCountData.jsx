@@ -4,31 +4,9 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import PendingActionsIcon from "@mui/icons-material/PendingActions";
 import CancelIcon from "@mui/icons-material/Cancel";
 import TodayIcon from "@mui/icons-material/Today";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 
 
 const ApprovalCountData = () => {
-
-    const [approvalCardData, setApprovalCardData] = useState(null);
-    const [loading, setLoading] = useState(null);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true)
-            try {
-                const responce = await fetchMemberAPI();
-                setApprovalCardData(responce);
-            } catch (err) {
-                console.error("Failed to load Approval Card Data:", err);
-                toast.error("Failed to load Approval Card Data", err)
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchData();
-    }, []);
 
     const CardCount = [
         {
@@ -79,7 +57,7 @@ const ApprovalCountData = () => {
         <>
             <Grid container spacing={1}>
                 {CardCount.map((value) => (
-                    <Grid size={{ xs: 12, sm: 2, md: 2 }}>
+                    <Grid size={{ xs: 6, sm: 6, md: 2 }}>
                         <Card
                             key={value.id}
                             sx={{

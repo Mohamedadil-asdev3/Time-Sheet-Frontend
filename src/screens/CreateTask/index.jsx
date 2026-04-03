@@ -8,14 +8,13 @@ import { toast } from "react-toastify";
 import ProfileInfo from "../TaskPage/ProfileInfo";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CancelIcon from '@mui/icons-material/Cancel';
-import { createTaskListAPI, fetchTasksAPI, fetchSubTasksAPI, fetchPlatformsAPI, fetchUserProfileAPI, updateTaskListAPI, getTaskListByIdAPI } from "../../Api";
+import { createTaskListAPI, fetchTasksAPI, fetchSubTasksAPI, fetchPlatformsAPI, fetchUserProfileAPI } from "../../Api";
 
 const CreateTask = () => {
 
     const navigate = useNavigate();
     const { search } = useLocation();
     const searchParams = new URLSearchParams(search);
-
     const mode = searchParams.get("mode");
     const taskId = searchParams.get("taskId");
 
@@ -24,21 +23,15 @@ const CreateTask = () => {
     const [tasks, setTasks] = useState([]);
     const [subtasks, setSubtasks] = useState([]);
     const [profileData, setProfileData] = useState(null);
+    console.log("pro", profileData);
     const [loading, setLoading] = useState(false);
     const [loadingOptions, setLoadingOptions] = useState(true);
-    const [isEditMode, setIsEditMode] = useState(false);
 
-    const initialFormState = {
-        date: dayjs(),
-        platform: null,
-        task: null,
-        subtask: null,
-        bitrix: "",
-        duration: null,
-        description: "",
-    };
-
-    const [form, setForm] = useState(initialFormState);
+    useEffect(() => {
+        if (mode === "edit" && taskId) {
+            // fetch task and set form + taskRows (with 1 row)
+        }
+    }, [taskId, mode]);
 
     // Fetch all dropdown data on component mount
     useEffect(() => {
@@ -89,57 +82,17 @@ const CreateTask = () => {
         fetchUserProfileData()
     }, []);
 
-    useEffect(() => {
-        if (mode === "edit" && taskId) {
-            setIsEditMode(true);
-            fetchTaskForEdit();
-        } else {
-            // Add one empty row by default in Create mode
-            setTaskRows([{
-                platform: null,
-                task: null,
-                subtask: null,
-                bitrix: "",
-                duration: null,
-                description: "",
-            }]);
-        }
-    }, [mode, taskId]);
-
-    const fetchTaskForEdit = async () => {
-        setLoading(true);
-        try {
-            const response = await getTaskListByIdAPI(taskId);   // You need to implement this API
-
-            // Assuming API returns single task object
-            const task = response?.data || response;
-
-            if (task) {
-                setForm({
-                    date: task.date ? dayjs(task.date) : dayjs(),
-                });
-
-                // Populate taskRows with existing data
-                setTaskRows([{
-                    platform: task.platform ? { id: task.platform, name: task.platform_name } : null,
-                    task: task.task ? { id: task.task, name: task.task_name } : null,
-                    subtask: task.subtask ? { id: task.subtask, name: task.subtask_name } : null,
-                    bitrix: task.bitrix_id || "",
-                    duration: task.duration ? dayjs().hour(0).minute(parseFloat(task.duration)) : null,
-                    description: task.description || "",
-                }]);
-            }
-        } catch (err) {
-            console.error("Failed to fetch task for edit:", err);
-            toast.error("Failed to load task details");
-            // Fallback to create mode
-            setTaskRows([{
-                platform: null, task: null, subtask: null, bitrix: "", duration: null, description: "",
-            }]);
-        } finally {
-            setLoading(false);
-        }
+    const initialFormState = {
+        date: dayjs(),
+        platform: null,
+        task: null,
+        subtask: null,
+        bitrisk: "",
+        duration: null,
+        description: "",
     };
+
+    const [form, setForm] = useState(initialFormState);
 
     const addNewRow = () => {
         setTaskRows(prev => [
@@ -148,7 +101,7 @@ const CreateTask = () => {
                 platform: null,
                 task: null,
                 subtask: null,
-                bitrix: "",
+                bitrisk: "",
                 duration: null,
                 description: "",
             }
@@ -169,70 +122,18 @@ const CreateTask = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    // Add this helper function inside your component
-    const formatDurationForPayload = (durationValue) => {
-        if (!durationValue) return "0m";
-
-        const hours = durationValue.hour();
-        const minutes = durationValue.minute();
-
-        if (hours > 0 && minutes > 0) {
-            return `${hours}h ${minutes}m`;
-        } else if (hours > 0) {
-            return `${hours}h`;
-        } else if (minutes > 0) {
-            return `${minutes}m`;
-        } else {
-            return "0m";
-        }
-    };
-
-    const handleUpdate = async () => {
-        if (!taskId || taskRows.length === 0) return;
-
-        setLoading(true);
-        try {
-            const row = taskRows[0];
-
-            const payload = {
-                name: profileData?.name || "",
-                employeeId: profileData?.employee_id || "",
-                entity: profileData?.business_unit || "",
-                department: profileData?.department || "",
-                location: profileData?.location || "",
-                date: form.date.format("YYYY-MM-DD"),
-                platform: row.platform?.id,
-                task: row.task?.id,
-                subtask: row.subtask?.id,
-                bitrix_id: row.bitrix?.trim() || null,
-                duration: formatDurationForPayload(row.duration),
-                description: row.description?.trim() || "",
-            };
-
-            await updateTaskListAPI(taskId, payload);
-
-            toast.success("Task updated successfully!");
-            setTimeout(() => navigate("/task"), 1500);
-
-        } catch (err) {
-            toast.error(err.response?.data?.detail || "Failed to update task");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleSave = async () => {
         if (taskRows.length === 0) {
             toast.warn("Add at least one task before saving");
             return;
         }
 
-        const missingFields = taskRows.some((row) =>
-            !row.platform ||
-            !row.task ||
-            !row.subtask ||
-            !row.duration ||
-            !row.description?.trim()
+        const missingFields = taskRows.some(
+            (row) =>
+                !row.platform ||
+                !row.task ||
+                !row.subtask ||
+                !row.description?.trim()
         );
 
         if (missingFields) {
@@ -254,10 +155,12 @@ const CreateTask = () => {
                     platform: row.platform?.id,
                     task: row.task?.id,
                     subtask: row.subtask?.id,
-                    bitrix_id: row.bitrix.trim() || null,
-                    duration: formatDurationForPayload(row.duration),
+                    bitrisk: row.bitrisk.trim() || null,
+                    duration: row.duration
+                        ? (row.duration.hour() * 60 + row.duration.minute())
+                        : 0,
                     description: row.description.trim(),
-                    status: 2,
+                    status: "2",     // ← changed here
                 })),
             };
 
@@ -298,7 +201,6 @@ const CreateTask = () => {
                 !row.platform ||
                 !row.task ||
                 !row.subtask ||
-                !row.duration ||
                 !row.description?.trim()
         );
 
@@ -321,11 +223,12 @@ const CreateTask = () => {
                     platform: row.platform?.id,
                     task: row.task?.id,
                     subtask: row.subtask?.id,
-                    bitrix_id: row.bitrix.trim() || null,
-                    duration: formatDurationForPayload(row.duration),
+                    bitrisk: row.bitrisk.trim() || null,
+                    duration: row.duration
+                        ? (row.duration.hour() * 60 + row.duration.minute())
+                        : 0,
                     description: row.description.trim(),
-                    //status: 3,
-                    status: 1,
+                    status: "1",   // ← changed here
                 })),
             };
 
@@ -360,8 +263,8 @@ const CreateTask = () => {
             ...initialFormState,
             date: dayjs(), // reset to today again
         });
+
         toast.warning("Form cleared", { icon: "🧹" });
-        navigate("/task");
     };
 
     const buildToastMessage = () => {
@@ -376,13 +279,11 @@ const CreateTask = () => {
                     <Card sx={{ mt: 2 }}>
                         <CardContent>
                             <Box display="flex" justifyContent="space-between" alignItems="center">
-                                <Typography fontSize={25} fontWeight={700}>{isEditMode ? "Edit Task" : "Create Task"}</Typography>
+                                <Typography fontSize={25} fontWeight={700}>Create Task</Typography>
                                 <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 1, alignItems: "center", }}>
-                                    {!isEditMode && (
-                                        <IconButton onClick={addNewRow}>
-                                            <AddCircleOutlineIcon color="primary" style={{ fontSize: 35 }} />
-                                        </IconButton>
-                                    )}
+                                    <IconButton onClick={addNewRow}>
+                                        <AddCircleOutlineIcon color="primary" style={{ fontSize: 35 }} />
+                                    </IconButton>
                                     <DatePicker
                                         value={form.date}
                                         onChange={(newValue) =>
@@ -395,7 +296,6 @@ const CreateTask = () => {
                                                 InputProps: {
                                                     readOnly: true,
                                                 },
-                                                disabled: isEditMode,
                                                 sx: { width: 150 },
                                             },
                                         }}
@@ -417,7 +317,7 @@ const CreateTask = () => {
                                         <Typography fontSize={14} fontWeight={600} mb={1}>
                                             Task #{index + 1}
                                         </Typography>
-                                        <IconButton color="error" onClick={() => removeRow(index)} disabled={isEditMode}>
+                                        <IconButton color="error" onClick={() => removeRow(index)}>
                                             <Icon><CancelIcon /></Icon>
                                         </IconButton>
                                     </Box>
@@ -461,11 +361,11 @@ const CreateTask = () => {
 
                                         <Grid size={{ xs: 12, md: 1.5 }}>
                                             <TextField
-                                                label="bitrix Id"
+                                                label="Bitrisk Id"
                                                 size="small"
                                                 fullWidth
-                                                value={row.bitrix}
-                                                onChange={(e) => updateRow(index, "bitrix", e.target.value)}
+                                                value={row.bitrisk}
+                                                onChange={(e) => updateRow(index, "bitrisk", e.target.value)}
                                             />
                                         </Grid>
 
@@ -477,7 +377,7 @@ const CreateTask = () => {
                                                 ampm={false}
                                                 views={['hours', 'minutes']}
                                                 format="HH:mm"
-                                                slotProps={{ textField: { size: "small", fullWidth: true, required: true } }}
+                                                slotProps={{ textField: { size: "small", fullWidth: true } }}
                                             />
                                         </Grid>
 
@@ -486,7 +386,6 @@ const CreateTask = () => {
                                                 label="Description"
                                                 size="small"
                                                 fullWidth
-                                                required
                                                 value={row.description}
                                                 onChange={(e) => updateRow(index, "description", e.target.value)}
                                             />
@@ -497,15 +396,9 @@ const CreateTask = () => {
                             {taskRows.length > 0 && (
                                 <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 2, mt: 2 }}>
                                     <Button variant="contained" size="small" color="error" onClick={handleCancel}>Cancel</Button>
-                                    {isEditMode ? (
-                                        <Button variant="contained" size="small" color="primary" onClick={handleUpdate} disabled={loading}>
-                                            {loading ? "Updating..." : "Update Task"}
-                                        </Button>
-                                    ) : (
-                                        <Button variant="contained" size="small" color="warning" onClick={handleSave} disabled={loading}>
-                                            {loading ? "Saving..." : "Save"}
-                                        </Button>
-                                    )}
+                                    <Button variant="contained" size="small" color="warning" onClick={handleSave} disabled={loading}>
+                                        {loading ? "Saving..." : "Save"}
+                                    </Button>
                                     <Button variant="contained" size="small" color="success" onClick={handleSubmit} disabled={loading}>
                                         {loading ? "Submitting..." : "Submit"}
                                     </Button>
