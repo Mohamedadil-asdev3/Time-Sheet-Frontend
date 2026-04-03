@@ -104,15 +104,54 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
     };
 
     // Submit selected draft tasks
+    // const handleSubmitSelected = async () => {
+    //     if (selectedDrafts.size === 0) return;
+
+    //     try {
+    //         const taskIds = Array.from(selectedDrafts);
+
+    //         // Call your update API for each selected task with status = 1
+    //         for (const id of taskIds) {
+    //             await updateTaskListAPI(id, { status: 1 });   // You'll need to create this API
+    //         }
+
+    //         toast.success(`${taskIds.length} task(s) submitted successfully!`);
+
+    //         // Clear selection
+    //         setSelectedDrafts(new Set());
+
+    //         // Optional: Refresh the data
+    //         if (typeof onDeleteSuccess === "function") {
+    //             // You can reuse or create a refresh callback
+    //             onDeleteSuccess(null); // or pass a special value to trigger refresh
+    //         }
+
+    //     } catch (err) {
+    //         console.error("Submit failed:", err);
+    //         toast.error("Failed to submit selected tasks");
+    //     }
+    // };
+
     const handleSubmitSelected = async () => {
         if (selectedDrafts.size === 0) return;
 
-        try {
-            const taskIds = Array.from(selectedDrafts);
+        const taskIds = Array.from(selectedDrafts);
 
-            // Call your update API for each selected task with status = 1
+        try {
             for (const id of taskIds) {
-                await updateTaskListAPI(id, { status: 1 });   // You'll need to create this API
+                // Find full task object
+                const taskToSubmit = DailyTabelData?.tasks?.find(t => t.id === id);
+                if (!taskToSubmit) continue;
+
+                const payload = {
+                    ...taskToSubmit,
+                    status: 1,          
+                };
+
+                console.log("payload for submit", payload);
+
+
+                await updateTaskListAPI(id, payload);
             }
 
             toast.success(`${taskIds.length} task(s) submitted successfully!`);
@@ -120,10 +159,9 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
             // Clear selection
             setSelectedDrafts(new Set());
 
-            // Optional: Refresh the data
+            // Refresh data
             if (typeof onDeleteSuccess === "function") {
-                // You can reuse or create a refresh callback
-                onDeleteSuccess(null); // or pass a special value to trigger refresh
+                onDeleteSuccess(null);   // You can modify this to trigger full refresh
             }
 
         } catch (err) {

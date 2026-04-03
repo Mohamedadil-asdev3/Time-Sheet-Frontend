@@ -75,8 +75,6 @@ const CreateTask = () => {
         try {
             setLoading(true);
             const res = await fetchUserProfileAPI();
-            console.log("profile", res);
-
             setProfileData(res);
         } catch (error) {
             console.log("Failed to load Profile data")
@@ -187,6 +185,7 @@ const CreateTask = () => {
         }
     };
 
+    // update button 
     const handleUpdate = async () => {
         if (!taskId || taskRows.length === 0) return;
 
@@ -221,6 +220,43 @@ const CreateTask = () => {
         }
     };
 
+    // update & Submit button
+    const handleUpdateAndSubmit = async () => {
+        if (!taskId || taskRows.length === 0) return;
+
+        setLoading(true);
+        try {
+            const row = taskRows[0];
+
+            const payload = {
+                name: profileData?.name || "",
+                employeeId: profileData?.employee_id || "",
+                entity: profileData?.business_unit || "",
+                department: profileData?.department || "",
+                location: profileData?.location || "",
+                date: form.date.format("YYYY-MM-DD"),
+                platform: row.platform?.id,
+                task: row.task?.id,
+                subtask: row.subtask?.id,
+                bitrix_id: row.bitrix?.trim() || null,
+                duration: formatDurationForPayload(row.duration),
+                description: row.description?.trim() || "",
+                status: 1,                    // Change to Submitted (status = 1)
+            };
+
+            await updateTaskListAPI(taskId, payload);
+
+            toast.success("Task updated and submitted successfully!");
+            setTimeout(() => navigate("/task"), 1500);
+
+        } catch (err) {
+            toast.error(err.response?.data?.detail || "Failed to update & submit task");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // save button
     const handleSave = async () => {
         if (taskRows.length === 0) {
             toast.warn("Add at least one task before saving");
@@ -287,6 +323,7 @@ const CreateTask = () => {
         }
     };
 
+    // submit button
     const handleSubmit = async () => {
         if (taskRows.length === 0) {
             toast.warn("Add at least one task before submitting");
@@ -498,17 +535,24 @@ const CreateTask = () => {
                                 <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: 2, mt: 2 }}>
                                     <Button variant="contained" size="small" color="error" onClick={handleCancel}>Cancel</Button>
                                     {isEditMode ? (
-                                        <Button variant="contained" size="small" color="primary" onClick={handleUpdate} disabled={loading}>
-                                            {loading ? "Updating..." : "Update Task"}
-                                        </Button>
+                                        <>
+                                            <Button variant="contained" size="small" color="warning" onClick={handleUpdate} disabled={loading}>
+                                                {loading ? "Updating..." : "Update"}
+                                            </Button>
+                                            <Button variant="contained" size="small" color="success" onClick={handleUpdateAndSubmit} disabled={loading}>
+                                                {loading ? "Updating..." : "Update & Submit"}
+                                            </Button>
+                                        </>
                                     ) : (
-                                        <Button variant="contained" size="small" color="warning" onClick={handleSave} disabled={loading}>
-                                            {loading ? "Saving..." : "Save"}
-                                        </Button>
+                                        <>
+                                            <Button variant="contained" size="small" color="warning" onClick={handleSave} disabled={loading}>
+                                                {loading ? "Saving..." : "Save"}
+                                            </Button>
+                                            <Button variant="contained" size="small" color="success" onClick={handleSubmit} disabled={loading}>
+                                                {loading ? "Submitting..." : "Submit"}
+                                            </Button>
+                                        </>
                                     )}
-                                    <Button variant="contained" size="small" color="success" onClick={handleSubmit} disabled={loading}>
-                                        {loading ? "Submitting..." : "Submit"}
-                                    </Button>
                                 </Box>
                             )}
                         </CardContent>
