@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Chip, Card, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Grid, } from "@mui/material";
+import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Chip, Card, IconButton, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Grid, Checkbox, } from "@mui/material";
 import dayjs from "dayjs";
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { deleteTaskListAPI } from "../../Api";
+import { deleteTaskListAPI, updateTaskListAPI } from "../../Api";
 import { toast } from "react-toastify";
 
 
@@ -16,11 +16,16 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
     const [deletingId, setDeletingId] = useState(null);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedTask, setSelectedTask] = useState(null);
+    console.log("selectedTask", selectedTask);
+
     const [openViewDialog, setOpenViewDialog] = useState(false);
+    // New state for checkbox selection
+    const [selectedDrafts, setSelectedDrafts] = useState(new Set());
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const TabelHeader = [
+        { id: 0, title: "" },
         { id: 1, title: "Task Id" },
         { id: 2, title: "Date" },
         { id: 3, title: "Platform" },
@@ -36,6 +41,21 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
     ];
 
     const TodayDate = DailyTabelData?.date;
+
+    const isDraft = (task) => { return task?.status_name?.toLowerCase() === "draft"; }
+
+    // Status color mapping
+    const getStatusColor = (statusName) => {
+        if (!statusName) return "default";
+
+        if (statusName === "Draft") return "warning";
+        if (statusName === "Submited") return "info";
+        if (statusName === "Approved") return "success";
+        if (statusName === "Rejected") return "error";
+        if (statusName === "Completed") return "secondary";
+
+        return "default"; // fallback
+    };
 
     // Open delete confirmation dialog
     const handleOpenDelete = (task) => {
@@ -62,11 +82,53 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
     const handleEditClick = (task) => {
         if (isDraft(task)) {
             // Navigate to create task page in edit mode
-            navigate(`/create-task?mode=edit&taskId=${task.id}`);
+            navigate(`/addTask?mode=edit&taskId=${task.id}`);
             // Alternative (if you prefer path params): navigate(`/create-task/edit/${task.id}`);
         } else {
             // For non-drafts → just view
             handleViewClick(task);
+        }
+    };
+
+    // Handle checkbox change for draft tasks
+    const handleCheckboxChange = (taskId) => {
+        setSelectedDrafts(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(taskId)) {
+                newSet.delete(taskId);
+            } else {
+                newSet.add(taskId);
+            }
+            return newSet;
+        });
+    };
+
+    // Submit selected draft tasks
+    const handleSubmitSelected = async () => {
+        if (selectedDrafts.size === 0) return;
+
+        try {
+            const taskIds = Array.from(selectedDrafts);
+
+            // Call your update API for each selected task with status = 1
+            for (const id of taskIds) {
+                await updateTaskListAPI(id, { status: 1 });   // You'll need to create this API
+            }
+
+            toast.success(`${taskIds.length} task(s) submitted successfully!`);
+
+            // Clear selection
+            setSelectedDrafts(new Set());
+
+            // Optional: Refresh the data
+            if (typeof onDeleteSuccess === "function") {
+                // You can reuse or create a refresh callback
+                onDeleteSuccess(null); // or pass a special value to trigger refresh
+            }
+
+        } catch (err) {
+            console.error("Submit failed:", err);
+            toast.error("Failed to submit selected tasks");
         }
     };
 
@@ -84,8 +146,8 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
 
             // ── Important ── Tell parent that this task was deleted
             if (typeof onDeleteSuccess === "function") {
-                console.log('typeof onDeleteSuccess',typeof onDeleteSuccess);
-                
+                console.log('typeof onDeleteSuccess', typeof onDeleteSuccess);
+
                 onDeleteSuccess(id);   // pass the deleted id
             }
 
@@ -99,7 +161,7 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
         }
     };
 
-    const isDraft = (task) => { return task?.status_name?.toLowerCase() === "draft"; }
+
 
     return (
         <Box>
@@ -147,6 +209,15 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                                             '&:last-child td': { borderBottom: 0 }
                                         }}
                                     >
+                                        <TableCell>
+                                            {isDraft(data) && (
+                                                <Checkbox
+                                                    size="small"
+                                                    checked={selectedDrafts.has(data.id)}
+                                                    onChange={() => handleCheckboxChange(data.id)}
+                                                />
+                                            )}
+                                        </TableCell>
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{data.date || "-"}</TableCell>
                                         <TableCell>{data.platform_name || "-"}</TableCell>
@@ -159,7 +230,7 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                                             <Chip
                                                 label={data.status_name}
                                                 size="small"
-                                                color={data.status_name === "Inprogress" ? "info" : "warning"}
+                                                color={getStatusColor(data.status_name)}
                                             />
                                         </TableCell>
                                         <TableCell>{data.user || "-"}</TableCell>
@@ -205,6 +276,19 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                {/* Submit Selected Button - Shows only when drafts are selected */}
+                {selectedDrafts.size > 0 && (
+                    <Box sx={{ p: 2, borderTop: "1px solid #e0e0e0", textAlign: "right" }}>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            onClick={handleSubmitSelected}
+                        //disabled={loading}
+                        >
+                            Submit Selected ({selectedDrafts.size})
+                        </Button>
+                    </Box>
+                )}
             </Card>
 
             {/* Delete Confirmation Dialog */}
@@ -297,7 +381,7 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
 
                             <Grid size={{ xs: 12, sm: 6 }}>
                                 <Typography variant="subtitle2" color="text.secondary">Bitrix ID</Typography>
-                                <Typography variant="body1">{selectedTask.bitrix_id || selectedTask.bitrisk || "—"}</Typography>
+                                <Typography variant="body1">{selectedTask.bitrix_id || "—"}</Typography>
                             </Grid>
 
                             <Grid size={{ xs: 12, sm: 6 }}>
@@ -316,7 +400,7 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                                 <Typography variant="subtitle2" color="text.secondary">Status</Typography>
                                 <Chip
                                     label={selectedTask.status_name || "Unknown"}
-                                    color={selectedTask.status_name === "Inprogress" ? "info" : "default"}
+                                    color={getStatusColor(selectedTask.status_name)}
                                     sx={{ mt: 0.5 }}
                                 />
                             </Grid>
@@ -349,21 +433,22 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                         </Grid>
                     )}
 
-                    {/* ── New Approval Log Section ── */}
                     <Box sx={{ mt: 4 }}>
                         <Typography variant="h6" gutterBottom sx={{ color: "info.dark" }}>
                             Approval Log
                         </Typography>
 
                         {selectedTask?.approval_log?.length > 0 ? (
-                            <Timeline position="alternate">  {/* or "left" / "right" */}
+                            <Timeline position="alternate">
                                 {selectedTask.approval_log
-                                    .slice()                     // avoid mutating original
-                                    .sort((a, b) => new Date(b.at) - new Date(a.at)) // newest first (reverse chrono)
+                                    .slice()
+                                    .sort((a, b) => new Date(b.at || b.created_at) - new Date(a.at || a.created_at))
                                     .map((log, index) => (
                                         <TimelineItem key={index}>
                                             <TimelineOppositeContent color="text.secondary" sx={{ m: 'auto 0' }}>
-                                                {log.at ? dayjs(log.at).format("DD MMM YYYY • HH:mm") : "—"}
+                                                {log.at || log.created_at
+                                                    ? dayjs(log.at || log.created_at).format("DD MMM YYYY • HH:mm")
+                                                    : "—"}
                                             </TimelineOppositeContent>
 
                                             <TimelineSeparator>
@@ -371,102 +456,18 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                                                     color={
                                                         log.status === "approved" ? "success" :
                                                             log.status === "rejected" ? "error" :
-                                                                log.status === "pending" ? "warning" :
-                                                                    "grey"
+                                                                log.status === "pending" ? "warning" : "grey"
                                                     }
-                                                    variant={index === 0 ? "outlined" : "filled"} // highlight latest
                                                 />
                                                 {index < selectedTask.approval_log.length - 1 && <TimelineConnector />}
                                             </TimelineSeparator>
 
                                             <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                                <Typography variant="h6" component="span">
-                                                    {log.action || "Action"}
+                                                <Typography variant="subtitle1">
+                                                    {log.action || log.status || "Action"}
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
-                                                    by {log.by || "—"}
-                                                </Typography>
-                                                {log.comment && (
-                                                    <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>
-                                                        "{log.comment}"
-                                                    </Typography>
-                                                )}
-                                            </TimelineContent>
-                                        </TimelineItem>
-                                    ))}
-                            </Timeline>
-                        ) : (
-                            <Typography color="text.secondary" align="center" sx={{ py: 4 }}>
-                                No approval history available yet.
-                            </Typography>
-                        )}
-                    </Box>
-                </DialogContent>
-
-                <DialogContent dividers sx={{ py: 3 }}>
-                    {selectedTask && (
-                        <Grid container spacing={2}>
-                            {/* ── Your existing fields remain here ── */}
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Typography variant="subtitle2" color="text.secondary">Task ID</Typography>
-                                <Typography variant="body1">{selectedTask.id || "—"}</Typography>
-                            </Grid>
-
-                            {/* ... all other existing Grid items ... */}
-
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Typography variant="subtitle2" color="text.secondary">Approver Status</Typography>
-                                <Typography variant="body1" sx={{ fontWeight: selectedTask.approval_status ? "medium" : "normal" }}>
-                                    {selectedTask.approval_status || "Pending / Not required"}
-                                </Typography>
-                                {selectedTask.approved_by && (
-                                    <Typography variant="caption" color="text.secondary">
-                                        Approved by: {selectedTask.approved_by} on{" "}
-                                        {selectedTask.approved_at ? dayjs(selectedTask.approved_at).format("DD MMM YYYY HH:mm") : "—"}
-                                    </Typography>
-                                )}
-                            </Grid>
-
-                            {/* ... created by / created at ... */}
-                        </Grid>
-                    )}
-
-                    {/* ── New Approval Log Section ── */}
-                    <Box sx={{ mt: 4 }}>
-                        <Typography variant="h6" gutterBottom sx={{ color: "info.dark" }}>
-                            Approval Log
-                        </Typography>
-
-                        {selectedTask?.approval_log?.length > 0 ? (
-                            <Timeline position="alternate">  {/* or "left" / "right" */}
-                                {selectedTask.approval_log
-                                    .slice()                     // avoid mutating original
-                                    .sort((a, b) => new Date(b.at) - new Date(a.at)) // newest first (reverse chrono)
-                                    .map((log, index) => (
-                                        <TimelineItem key={index}>
-                                            <TimelineOppositeContent color="text.secondary" sx={{ m: 'auto 0' }}>
-                                                {log.at ? dayjs(log.at).format("DD MMM YYYY • HH:mm") : "—"}
-                                            </TimelineOppositeContent>
-
-                                            <TimelineSeparator>
-                                                <TimelineDot
-                                                    color={
-                                                        log.status === "approved" ? "success" :
-                                                            log.status === "rejected" ? "error" :
-                                                                log.status === "pending" ? "warning" :
-                                                                    "grey"
-                                                    }
-                                                    variant={index === 0 ? "outlined" : "filled"} // highlight latest
-                                                />
-                                                {index < selectedTask.approval_log.length - 1 && <TimelineConnector />}
-                                            </TimelineSeparator>
-
-                                            <TimelineContent sx={{ py: '12px', px: 2 }}>
-                                                <Typography variant="h6" component="span">
-                                                    {log.action || "Action"}
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    by {log.by || "—"}
+                                                    by {log.by || log.user || "—"}
                                                 </Typography>
                                                 {log.comment && (
                                                     <Typography variant="body2" sx={{ mt: 1, fontStyle: "italic" }}>

@@ -131,8 +131,10 @@ const EXPANDED_WIDTH = 210;
 const HEADER_HEIGHT = 64;
 
 const Sidebar = () => {
+    
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -235,9 +237,9 @@ const Sidebar = () => {
                         borderColor: 'divider',
                         boxShadow: '0 -2px 10px rgba(0,0,0,0.12)',
                         zIndex: 1200,
-                        bgcolor: "black",
-                        //height: 65,
-                        height: 500,
+                        //bgcolor: "black",
+                        height: 65,
+
                     }}
                 >
                     {menuItems.map((item) => (
@@ -248,7 +250,7 @@ const Sidebar = () => {
                             icon={item.icon}
                             sx={{
                                 '& .MuiBottomNavigationAction-label': {
-                                    fontSize: '0.75rem',
+                                    fontSize: '0.65rem',
                                     mt: 0.5,
                                 },
                                 minWidth: 'auto',

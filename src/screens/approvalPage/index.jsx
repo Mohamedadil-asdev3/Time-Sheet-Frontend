@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Autocomplete, Box, Card, CardContent, Chip, Grid, IconButton, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import FilterListOffIcon from '@mui/icons-material/FilterListOff';
@@ -6,10 +6,33 @@ import TableRowsIcon from '@mui/icons-material/TableRows';
 import AppsIcon from '@mui/icons-material/Apps';
 import ApprovalTable from "./approvalTable";
 import ApprovalCard from "./approvalCard";
+import { toast } from "react-toastify";
+import { fetchApprovalGetAPI } from "../../Api";
 
 const ApprovalPage = () => {
+
+    const [approvalData, setApprovalData] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [OpenFilter, setOpenFilter] = useState(false);
     const [selectedTab, setSelectedTab] = useState("table");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetchApprovalGetAPI();
+                setApprovalData(response);
+            } catch (err) {
+                console.error("Failed to load Approval Data:", err);
+                toast.error("Failed to load Approval Daata");
+                setApprovalData(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     const users = ["Mohamedadil", "Venkat", "Dhanush"];
 
@@ -19,8 +42,8 @@ const ApprovalPage = () => {
     ];
 
     const tabComponents = {
-        table: <ApprovalTable />,
-        card: <ApprovalCard />,
+        table: <ApprovalTable approvalData={approvalData} />,
+        card: <ApprovalCard approvalData={approvalData} />,
     };
 
     const handleTabClick = (tabId) => {

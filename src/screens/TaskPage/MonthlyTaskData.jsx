@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Box, Typography, Accordion, AccordionSummary, AccordionDetails, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, Paper, Card, IconButton, } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import dayjs from "dayjs";
-import CancelIcon from '@mui/icons-material/Cancel';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 
 const MonthlyTaskData = ({ MonthlyTabelData }) => {
@@ -164,7 +164,7 @@ const MonthlyTaskData = ({ MonthlyTabelData }) => {
                                                             </TableCell>
                                                             <TableCell>
                                                                 <IconButton>
-                                                                    <CancelIcon color="error" />
+                                                                    <VisibilityIcon />
                                                                 </IconButton>
                                                             </TableCell>
                                                         </TableRow>
