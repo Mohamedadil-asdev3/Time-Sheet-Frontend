@@ -73,7 +73,7 @@ const AppLayout = () => {
 
     return (
         <Box sx={{
-            minHeight: '100vh',
+            minHeight: '98vh',
             display: 'flex',
             flexDirection: 'column',
             position: 'relative'   // Important for mobile bottom bar
@@ -86,22 +86,22 @@ const AppLayout = () => {
                 sx={{
                     display: 'flex',
                     flexGrow: 1,
-                    mt: `${HEADER_HEIGHT}px`,     // Push content below header
-                    pb: isMobile ? '70px' : 0,    // Extra padding for bottom nav on mobile
+                    mt: isMobile ? 2 : 6,     // Push content below header
+                    pb: isMobile ? '30px' : 0,    // Extra padding for bottom nav on mobile
                 }}
             >
                 {/* Left Sidebar - Only for Tablet & Desktop */}
-                {!isMobile && <Sidebar />}
+                <Sidebar />
 
                 {/* Main Content */}
                 <Box
                     component="main"
                     sx={{
                         flexGrow: 1,
-                        px: { xs: 2, sm: 3 },
+                        px: { xs: 1, sm: 3 },
                         py: 3,
                         backgroundColor: theme.palette.background.default,
-                        minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+                        //minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
                     }}
                 >
                     <Outlet />

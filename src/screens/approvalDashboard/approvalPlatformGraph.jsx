@@ -1,7 +1,30 @@
 import Chart from "react-apexcharts";
 import { Card, CardContent, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { fetchPlatformOverviewAPI } from "../../Api";
 
 const ApprovalPlatformGraph = () => {
+
+    const [topPlatformGraph, setTopPlatformGraph] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            try {
+                const responce = await fetchPlatformOverviewAPI();
+                setTopPlatformGraph(responce);
+            } catch (err) {
+                console.error("Failed to load Top Platform Graph:", err);
+                toast.error("Failed to load Top Platform Graph", err)
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     const series = [
         {

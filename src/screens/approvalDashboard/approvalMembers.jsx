@@ -34,73 +34,6 @@ const ApprovalMembers = () => {
         "Location",
     ];
 
-    const tableData = [
-        {
-            sno: 1,
-            name: "Mohamed Adil",
-            employeeId: "EMP1001",
-            role: "Frontend Developer",
-            department: "Information Technology",
-            location: "Chennai",
-        },
-        {
-            sno: 2,
-            name: "Rahul Sharma",
-            employeeId: "EMP1002",
-            role: "Backend Developer",
-            department: "Information Technology",
-            location: "Bangalore",
-        },
-        {
-            sno: 3,
-            name: "Sneha Iyer",
-            employeeId: "EMP1003",
-            role: "UI/UX Designer",
-            department: "Product Design",
-            location: "Hyderabad",
-        },
-        {
-            sno: 4,
-            name: "Arjun Patel",
-            employeeId: "EMP1004",
-            role: "QA Engineer",
-            department: "Quality Assurance",
-            location: "Pune",
-        },
-        {
-            sno: 5,
-            name: "Priya Nair",
-            employeeId: "EMP1005",
-            role: "HR Manager",
-            department: "Human Resources",
-            location: "Kochi",
-        },
-        {
-            sno: 6,
-            name: "Vikram Singh",
-            employeeId: "EMP1006",
-            role: "DevOps Engineer",
-            department: "Cloud Operations",
-            location: "Noida",
-        },
-        {
-            sno: 7,
-            name: "Karthik Reddy",
-            employeeId: "EMP1007",
-            role: "Project Manager",
-            department: "Project Management",
-            location: "Chennai",
-        },
-        {
-            sno: 8,
-            name: "Neha Kapoor",
-            employeeId: "EMP1008",
-            role: "Business Analyst",
-            department: "Business Intelligence",
-            location: "Mumbai",
-        },
-    ];
-
     return (
         <Card sx={{ borderRadius: 4, boxShadow: 3 }}>
             <CardContent>
@@ -143,9 +76,9 @@ const ApprovalMembers = () => {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {tableData.map((row, index) => (
+                                {member.map((row, index) => (
                                     <TableRow
-                                        key={row.employeeId}
+                                        key={row.employee_id}
                                         hover
                                         sx={{
                                             '&:hover': { backgroundColor: '#F7FAFC' },
@@ -154,10 +87,10 @@ const ApprovalMembers = () => {
                                     >
                                         <TableCell>{index + 1}</TableCell>
                                         <TableCell>{row.name}</TableCell>
-                                        <TableCell>{row.employeeId}</TableCell>
-                                        <TableCell>{row.role}</TableCell>
-                                        <TableCell>{row.department}</TableCell>
-                                        <TableCell>{row.location}</TableCell>
+                                        <TableCell>{row.employee_id || "-"}</TableCell>
+                                        <TableCell>{row.designation || "-"}</TableCell>
+                                        <TableCell>{row.department || "-"}</TableCell>
+                                        <TableCell>{row.location || "-"}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

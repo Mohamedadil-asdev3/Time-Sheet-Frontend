@@ -1,15 +1,29 @@
-import {
-    Card,
-    CardContent,
-    Typography,
-    Box,
-    Button,
-    Avatar,
-    Chip,
-    LinearProgress
-} from "@mui/material";
+import { Card, CardContent, Typography, Box, Button, Avatar, Chip, LinearProgress } from "@mui/material";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { fetchTopPlatformAPI } from "../../Api";
 
 const ApprovalTopPlatform = () => {
+
+    const [topPlatform, setTopPlatform] = useState([]);
+    const [loading, setLoading] = useState("");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+            try {
+                const responce = await fetchTopPlatformAPI();
+                setTopPlatform(responce);
+            } catch (err) {
+                console.error("Failed to load Top Platform:", err);
+                toast.error("Failed to load Top Platform", err)
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     // ✅ Dummy Platform Data (Corporate Style)
     const platforms = [
