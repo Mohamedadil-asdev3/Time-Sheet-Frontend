@@ -498,7 +498,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Box, Card, CardContent, Chip, LinearProgress, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { fetchDailyTimelineAPI } from "../../Api";
+import { fetchDailyTimelineAPI } from "../../Api/userDashboardApi";
 
 const DailyTimeline = ({ onEntryClick }) => {
 

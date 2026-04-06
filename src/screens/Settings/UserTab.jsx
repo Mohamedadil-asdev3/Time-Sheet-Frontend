@@ -131,7 +131,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createUserAPI, updateUserAPI } from "../../Api";
+import { createUserAPI, updateUserAPI } from "../../Api/userApi";
 
 const UserTabs = ({ user, setUsers }) => {
 

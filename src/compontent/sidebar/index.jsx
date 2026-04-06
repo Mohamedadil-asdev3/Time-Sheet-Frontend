@@ -110,10 +110,8 @@
 // export default Sidebar;
 
 import {
-    Drawer, List, Divider, IconButton, ListItem, ListItemButton,
-    ListItemIcon, ListItemText, Box, Typography, useMediaQuery, useTheme,
-    BottomNavigation,
-    BottomNavigationAction
+    Drawer, List, Divider, IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText, Box, Typography, useMediaQuery, 
+    useTheme, BottomNavigation, BottomNavigationAction
 } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';

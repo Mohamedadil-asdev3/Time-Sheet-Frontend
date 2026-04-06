@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { deleteTaskListAPI, updateTaskListAPI } from "../../Api";
+import { deleteTaskListAPI, updateTaskListAPI } from "../../Api/TaskApi";
 import { toast } from "react-toastify";
 
 

@@ -4,7 +4,7 @@ import { Box, Card, CardContent, CircularProgress, IconButton, Stack, Typography
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { toast } from "react-toastify";
-import { fetchWorkHoursOverviewAPI } from "../../Api";
+import { fetchWorkHoursOverviewAPI } from "../../Api/userDashboardApi";
 
 const WorkHoursOverview = () => {
 

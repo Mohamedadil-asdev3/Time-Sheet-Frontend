@@ -131,7 +131,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createHolidayAPI, updateHolidayAPI } from "../../Api";   // ← Import your APIs
+import { createHolidayAPI, updateHolidayAPI } from "../../Api/settingsPageApi";   // ← Import your APIs
 
 const HolidayCalenderTab = ({ holiday, setHolidays }) => {
 

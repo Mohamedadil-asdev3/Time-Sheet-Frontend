@@ -131,7 +131,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createEmailAPI, updateEmailAPI } from "../../Api";   // ← Import your APIs
+import { createEmailAPI, updateEmailAPI } from "../../Api/settingsPageApi";
 
 const EmailTemplateTab = ({ email, setEmails }) => {
 

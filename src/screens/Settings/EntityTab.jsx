@@ -319,7 +319,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createEntityAPI, updateEntityAPI, fetchLocationsAPI } from "../../Api";   // ← Import your location API
+import { createEntityAPI, updateEntityAPI, fetchLocationsAPI } from "../../Api/settingsPageApi";
 
 const EntityTab = ({ entity, setEntities }) => {
 

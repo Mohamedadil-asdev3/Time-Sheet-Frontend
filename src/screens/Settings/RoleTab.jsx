@@ -132,7 +132,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createRoleAPI, updateRoleAPI } from "../../Api";   // ← Import your APIs
+import { createRoleAPI, updateRoleAPI } from "../../Api/settingsPageApi";   // ← Import your APIs
 
 const RoleTab = ({ role, setRoles }) => {
 

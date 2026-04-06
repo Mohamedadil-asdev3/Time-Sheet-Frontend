@@ -194,7 +194,7 @@ import TodayIcon from "@mui/icons-material/Today";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { toast } from "react-toastify";
-import { fetchTodayTasksAPI } from "../../Api";
+import { fetchTodayTasksAPI } from "../../Api/approverDashboardApi";
 
 const ApprovalTotalTask = () => {
 

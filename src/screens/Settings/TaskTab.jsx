@@ -131,7 +131,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createTaskAPI, updateTaskAPI } from "../../Api";   // ← Import your APIs
+import { createTaskAPI, updateTaskAPI } from "../../Api/settingsPageApi";   // ← Import your APIs
 
 const TaskTab = ({ tasks, setTasks }) => {
 

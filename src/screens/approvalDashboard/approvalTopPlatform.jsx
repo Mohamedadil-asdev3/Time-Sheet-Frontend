@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, Box, Button, Avatar, Chip, LinearProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { fetchTopPlatformAPI } from "../../Api";
+import { fetchTopPlatformAPI } from "../../Api/approverDashboardApi";
 
 const ApprovalTopPlatform = () => {
 

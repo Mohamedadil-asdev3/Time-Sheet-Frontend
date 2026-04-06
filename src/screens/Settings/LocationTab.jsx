@@ -129,7 +129,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createLocationAPI, updateLocationAPI } from "../../Api";
+import { createLocationAPI, updateLocationAPI } from "../../Api/settingsPageApi";
 
 const LocationTab = ({ location, setLocations }) => {
 

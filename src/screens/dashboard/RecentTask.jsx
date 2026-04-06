@@ -205,7 +205,7 @@ import { Box, Button, Card, CardContent, Chip, CircularProgress, Stack, Typograp
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { fetchRecentTasksAPI } from "../../Api";   // Make sure this import is correct
+import { fetchRecentTasksAPI } from "../../Api/userDashboardApi";   // Make sure this import is correct
 
 
 const RecentTasks = () => {

@@ -7,7 +7,7 @@ import AppsIcon from '@mui/icons-material/Apps';
 import ApprovalTable from "./approvalTable";
 import ApprovalCard from "./approvalCard";
 import { toast } from "react-toastify";
-import { fetchApprovalGetAPI } from "../../Api";
+import { fetchApprovalGetAPI } from "../../Api/approvalPageApi";
 
 const ApprovalPage = () => {
 

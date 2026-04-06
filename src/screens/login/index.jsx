@@ -305,8 +305,9 @@ import { useNavigate } from "react-router-dom";
 import { Box, Button, Grid, IconButton, InputAdornment, Stack, TextField, Typography, Divider, Link } from "@mui/material";
 import bgImage from "../../assets/loginpage.png";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { loginAPI } from "../../Api";
+//import { loginAPI } from "../../Api";
 import { toast } from 'react-toastify';
+import { loginAPI } from "../../Api/loginPageApi";
 
 const Login = () => {
     const navigate = useNavigate();

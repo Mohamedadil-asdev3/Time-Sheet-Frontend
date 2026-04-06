@@ -76,7 +76,7 @@ import { Card, CardContent, Typography, Avatar, Box, Button, Chip, Stack, Circul
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { fetchTopMenbersAPI } from "../../Api";
+import { fetchTopMenbersAPI } from "../../Api/approverDashboardApi";
 
 const ApprovalTopMembers = () => {
     const [topMembers, setTopMembers] = useState([]);   // Start with empty array

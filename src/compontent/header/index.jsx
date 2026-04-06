@@ -70,18 +70,35 @@
 // export default Header;
 
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppBar, Toolbar, IconButton, Typography, Avatar, Box, Tooltip, Drawer, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
+import { fetchUserProfileAPI } from "../../Api/userApi";
 
 const Header = ({ onMobileMenuClick, profileData }) => {
 
     const navigate = useNavigate();
     const [openProfileDrawer, setOpenProfileDrawer] = useState(false);
+    // const [proffileData, setProfileData] = useState(null);
+    // console.log("profile", profileData);
+
+
+    // useEffect(() => {
+    //     const fetchProfile = async () => {
+    //         try {
+    //             const res = await fetchUserProfileAPI();
+    //             setProfileData(res);
+    //         } catch (err) {
+    //             console.error("Failed to fetch user profile data:", err);
+    //         }
+    //     };
+
+    //     fetchProfile();
+    // }, []);
 
     const toggleProfileDrawer = () => {
         setOpenProfileDrawer(!openProfileDrawer);

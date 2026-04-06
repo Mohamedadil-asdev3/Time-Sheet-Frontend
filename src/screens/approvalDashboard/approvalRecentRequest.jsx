@@ -3,7 +3,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { fetchRecendApprovalAPI } from "../../Api";
+import { fetchRecendApprovalAPI } from "../../Api/approverDashboardApi";
 
 const ApprovalRecentRequests = () => {
 

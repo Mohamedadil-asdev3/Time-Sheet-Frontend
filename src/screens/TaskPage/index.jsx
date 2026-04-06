@@ -3,8 +3,9 @@ import ProfileInfo from "./ProfileInfo";
 import TaskSearch from "./TaskSearch";
 import TaskTabs from "./TaskTabs";
 import { useEffect, useState } from "react";
-import { fetchTasksListAPI, fetchUserProfileAPI } from "../../Api";
 import { toast } from "react-toastify";
+import { fetchTasksListAPI } from "../../Api/TaskApi";
+import { fetchUserProfileAPI } from "../../Api/userApi";
 
 
 const TaskPage = () => {

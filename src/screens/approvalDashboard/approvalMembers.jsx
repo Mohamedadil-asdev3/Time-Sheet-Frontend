@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, Table, TableHead, TableRow, TableCell, TableBody, Box, Button, TableContainer } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchMemberAPI } from "../../Api";
+import { fetchMemberAPI } from "../../Api/approverDashboardApi";
 import { toast } from "react-toastify";
 
 const ApprovalMembers = () => {

@@ -8,7 +8,10 @@ import { toast } from "react-toastify";
 import ProfileInfo from "../TaskPage/ProfileInfo";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import CancelIcon from '@mui/icons-material/Cancel';
-import { createTaskListAPI, fetchTasksAPI, fetchSubTasksAPI, fetchPlatformsAPI, fetchUserProfileAPI, updateTaskListAPI, getTaskListByIdAPI } from "../../Api";
+import { fetchPlatformsAPI, fetchSubTasksAPI, fetchTasksAPI } from "../../Api/settingsPageApi";
+import { fetchUserProfileAPI } from "../../Api/userApi";
+import { createTaskListAPI, getTaskListByIdAPI } from "../../Api/TaskApi";
+//import { createTaskListAPI, fetchTasksAPI, fetchSubTasksAPI, fetchPlatformsAPI, fetchUserProfileAPI, updateTaskListAPI, getTaskListByIdAPI } from "../../Api";
 
 const CreateTask = () => {
 

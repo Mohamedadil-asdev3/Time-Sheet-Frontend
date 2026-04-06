@@ -130,7 +130,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { toast } from "react-toastify";
-import { createDepartmentAPI, updateDepartmentAPI } from "../../Api";   // ← Import your APIs
+import { createDepartmentAPI, updateDepartmentAPI } from "../../Api/settingsPageApi";
 
 const DepartmentTab = ({ department, setDepartments }) => {
 

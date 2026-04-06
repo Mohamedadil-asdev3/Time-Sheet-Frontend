@@ -19,8 +19,9 @@ import TaskTab from "./TaskTab";
 import SubTaskTab from "./SubTaskTab";
 import HolidayCalenderTab from "./HolidayCalenderTab";
 import EmailTemplateTab from "./EmailTemplateTab";
-import { fetchEntitiesAPI, fetchDepartmentsAPI, fetchLocationsAPI, fetchUsersAPI, fetchTasksAPI, fetchSubTasksAPI, fetchRolesAPI, fetchHolidayAPI, fetchEmailAPI, fetchPlatformsAPI } from "../../Api";
+import { fetchEntitiesAPI, fetchDepartmentsAPI, fetchLocationsAPI, fetchTasksAPI, fetchSubTasksAPI, fetchRolesAPI, fetchHolidayAPI, fetchEmailAPI, fetchPlatformsAPI } from "../../Api/settingsPageApi";
 import PlatformTab from "./PlatformTab";
+import { fetchUsersAPI } from "../../Api/userApi";
 
 const Settings = () => {
 
