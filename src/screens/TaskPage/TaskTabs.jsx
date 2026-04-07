@@ -8,7 +8,7 @@ import WeeklyTaskData from "./WeeklyTaskData";
 import MonthlyTaskData from "./MonthlyTaskData";
 
 
-const TaskTabs = ({ TaskData, onDeleteSuccess }) => {
+const TaskTabs = ({ TaskData, onDeleteSuccess, refereshData }) => {
 
     const DailyTabelData = TaskData?.[0] || [];
     const WeeklyTabelData = TaskData || [];
@@ -38,7 +38,7 @@ const TaskTabs = ({ TaskData, onDeleteSuccess }) => {
             </Tabs>
 
             <Box mt={3}>
-                {tab === 0 && <DailyTaskData DailyTabelData={DailyTabelData} onDeleteSuccess={onDeleteSuccess} />}
+                {tab === 0 && <DailyTaskData DailyTabelData={DailyTabelData} onDeleteSuccess={onDeleteSuccess} refereshData={refereshData} />}
                 {tab === 1 && <WeeklyTaskData WeeklyTabelData={WeeklyTabelData} />}
                 {tab === 2 && <MonthlyTaskData MonthlyTabelData={MonthlyTabelData} />}
             </Box>

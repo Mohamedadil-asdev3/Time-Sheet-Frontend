@@ -71,45 +71,56 @@
 
 
 import { useEffect, useState } from "react";
-import { AppBar, Toolbar, IconButton, Typography, Avatar, Box, Tooltip, Drawer, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Avatar, Box, Tooltip, Drawer, List, ListItem, ListItemText, Divider, Button, Grid } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AddTaskIcon from '@mui/icons-material/AddTask';
 import CloseIcon from '@mui/icons-material/Close';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import logo from "../../assets/logo.png";
 import { fetchUserProfileAPI } from "../../Api/userApi";
 
-const Header = ({ onMobileMenuClick, profileData }) => {
+const Header = ({ onMobileMenuClick }) => {
 
     const navigate = useNavigate();
     const [openProfileDrawer, setOpenProfileDrawer] = useState(false);
-    // const [proffileData, setProfileData] = useState(null);
-    // console.log("profile", profileData);
+    const [profileData, setProfileData] = useState(null);
+    console.log("profile", profileData);
 
 
-    // useEffect(() => {
-    //     const fetchProfile = async () => {
-    //         try {
-    //             const res = await fetchUserProfileAPI();
-    //             setProfileData(res);
-    //         } catch (err) {
-    //             console.error("Failed to fetch user profile data:", err);
-    //         }
-    //     };
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const res = await fetchUserProfileAPI();
+                setProfileData(res);
+            } catch (err) {
+                console.error("Failed to fetch user profile data:", err);
+            }
+        };
 
-    //     fetchProfile();
-    // }, []);
+        fetchProfile();
+    }, []);
 
     const toggleProfileDrawer = () => {
         setOpenProfileDrawer(!openProfileDrawer);
     };
 
+    const handleLogout = () => {
+        localStorage.clear();
+        navigate('/');
+    };
+
     // Fallback values if profileData is not available
     const userName = profileData?.name || "User";
+    const avatar = profileData?.avatar_initials || null;
+    const email = profileData?.email || "";
+    const phone = profileData?.phone || "";
+    const employeeId = profileData?.employee_id || "";
     const designation = profileData?.designation || profileData?.role || "Employee";
     const businessUnit = profileData?.business_unit || "";
     const department = profileData?.department || "";
     const location = profileData?.location || "";
+    const manager = profileData?.manager_name || "";
 
     return (
         <>
@@ -151,9 +162,7 @@ const Header = ({ onMobileMenuClick, profileData }) => {
 
                     {/* Right Section */}
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-
-                        {/* Add Task Button */}
-                        <Tooltip title="Add New Task">
+                        <Tooltip title="Add New Task" arrow placement="bottom">
                             <IconButton
                                 color="primary"
                                 onClick={() => navigate("/addTask")}
@@ -161,8 +170,6 @@ const Header = ({ onMobileMenuClick, profileData }) => {
                                 <AddTaskIcon />
                             </IconButton>
                         </Tooltip>
-
-                        {/* Profile Box - Clickable */}
                         <Box
                             onClick={toggleProfileDrawer}
                             sx={{
@@ -182,9 +189,8 @@ const Header = ({ onMobileMenuClick, profileData }) => {
                                     bgcolor: 'primary.main'
                                 }}
                             >
-                                {userName.charAt(0).toUpperCase()}
+                                {avatar}
                             </Avatar>
-
                             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
                                 <Typography variant="body1" fontWeight={600} lineHeight={1}>
                                     {userName}
@@ -194,8 +200,12 @@ const Header = ({ onMobileMenuClick, profileData }) => {
                                 </Typography>
                             </Box>
                         </Box>
+                        <Tooltip title="Logout" arrow placement="bottom">
+                            <IconButton color="error" onClick={handleLogout}>
+                                <LogoutIcon color="error" />
+                            </IconButton>
+                        </Tooltip>
                     </Box>
-
                 </Toolbar>
             </AppBar>
 
@@ -217,7 +227,7 @@ const Header = ({ onMobileMenuClick, profileData }) => {
                         <Avatar
                             sx={{ width: 90, height: 90, mb: 2, bgcolor: 'primary.main', fontSize: 32 }}
                         >
-                            {userName.charAt(0).toUpperCase()}
+                            {avatar}
                         </Avatar>
                         <Typography variant="h6" fontWeight={600}>{userName}</Typography>
                         <Typography color="text.secondary">{designation}</Typography>
@@ -226,6 +236,18 @@ const Header = ({ onMobileMenuClick, profileData }) => {
                     <Divider sx={{ mb: 3 }} />
 
                     <List>
+                        <ListItem>
+                            <ListItemText
+                                primary="Email"
+                                secondary={email || "N/A"}
+                            />
+                        </ListItem>
+                        <ListItem>
+                            <ListItemText
+                                primary="Phone"
+                                secondary={phone || "N/A"}
+                            />
+                        </ListItem>
                         <ListItem>
                             <ListItemText
                                 primary="Business Unit"
@@ -246,13 +268,13 @@ const Header = ({ onMobileMenuClick, profileData }) => {
                         </ListItem>
                         <ListItem>
                             <ListItemText
-                                primary="Email"
-                                secondary={profileData?.email || "N/A"}
+                                primary="Reporting Manager"
+                                secondary={manager || "N/A"}
                             />
                         </ListItem>
                     </List>
 
-                    <Box sx={{ mt: 4 }}>
+                    <Box sx={{ mt: 1 }}>
                         <Button
                             variant="outlined"
                             fullWidth

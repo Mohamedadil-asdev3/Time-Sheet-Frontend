@@ -5,16 +5,18 @@ export const loginAPI = async (credentials) => {
     try {
         const res = await axios.post(`${API_BASE_URL}api/login/`, credentials);
 
-        const { access, refresh, user, message, force_change } = res.data;
+        const { access, refresh, user, roles, message, force_change } = res.data;
 
         // Store tokens
         localStorage.setItem("access_token", access);
         localStorage.setItem("refresh_token", refresh);
         localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem("roles", JSON.stringify(roles));
         localStorage.setItem("userEntity", JSON.stringify(user.entity_data || {}));
         setTokens(access, refresh);
-        // CRITICAL: Return access and refresh so Login.jsx can use them
-        return { access, refresh, user, message, force_change };
+        console.log("message", message);
+        return { access, refresh, user, roles, message, force_change };
+        
     } catch (error) {
         const msg = error.response?.data?.error || error.message || "Login failed";
         throw msg;

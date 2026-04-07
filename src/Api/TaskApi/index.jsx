@@ -1,9 +1,11 @@
 import axios from "axios";
 import { API_BASE_URL } from "../apiUtils";
 
-export const fetchTasksListAPI = async () => {
+export const fetchTasksListAPI = async (user_id) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}task/taskslist/`,);
+        const res = await axios.get(`${API_BASE_URL}task/taskslist/`, {
+            params: { user_id }
+        });
         return res.data;
     } catch (err) {
         console.error("Failed to fetch tasks:", err.response?.data || err.message);

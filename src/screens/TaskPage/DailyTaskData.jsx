@@ -9,7 +9,7 @@ import { deleteTaskListAPI, updateTaskListAPI } from "../../Api/TaskApi";
 import { toast } from "react-toastify";
 
 
-const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
+const DailyTaskData = ({ DailyTabelData, onDeleteSuccess, refereshData }) => {
 
     const navigate = useNavigate();
 
@@ -42,7 +42,16 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
 
     const TodayDate = DailyTabelData?.date;
 
-    const isDraft = (task) => { return task?.status_name?.toLowerCase() === "draft"; }
+    const isDraft = (task) => { return task?.status_name?.toLowerCase() === "draft"; };
+
+    // Get all draft task IDs from current data
+    const draftTaskIds = DailyTabelData?.tasks?.filter(task => isDraft(task))?.map(task => task.id) || [];
+
+    // Check if all drafts are selected
+    const allDraftsSelected = draftTaskIds.length > 0 && draftTaskIds.every(id => selectedDrafts.has(id));
+
+    // Check if some drafts are selected (for indeterminate state)
+    const someDraftsSelected = draftTaskIds.length > 0 && draftTaskIds.some(id => selectedDrafts.has(id)) && !allDraftsSelected;
 
     // Status color mapping
     const getStatusColor = (statusName) => {
@@ -81,11 +90,8 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
 
     const handleEditClick = (task) => {
         if (isDraft(task)) {
-            // Navigate to create task page in edit mode
             navigate(`/addTask?mode=edit&taskId=${task.id}`);
-            // Alternative (if you prefer path params): navigate(`/create-task/edit/${task.id}`);
         } else {
-            // For non-drafts → just view
             handleViewClick(task);
         }
     };
@@ -103,34 +109,16 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
         });
     };
 
-    // Submit selected draft tasks
-    // const handleSubmitSelected = async () => {
-    //     if (selectedDrafts.size === 0) return;
-
-    //     try {
-    //         const taskIds = Array.from(selectedDrafts);
-
-    //         // Call your update API for each selected task with status = 1
-    //         for (const id of taskIds) {
-    //             await updateTaskListAPI(id, { status: 1 });   // You'll need to create this API
-    //         }
-
-    //         toast.success(`${taskIds.length} task(s) submitted successfully!`);
-
-    //         // Clear selection
-    //         setSelectedDrafts(new Set());
-
-    //         // Optional: Refresh the data
-    //         if (typeof onDeleteSuccess === "function") {
-    //             // You can reuse or create a refresh callback
-    //             onDeleteSuccess(null); // or pass a special value to trigger refresh
-    //         }
-
-    //     } catch (err) {
-    //         console.error("Submit failed:", err);
-    //         toast.error("Failed to submit selected tasks");
-    //     }
-    // };
+    // Select All / Deselect All handler
+    const handleSelectAll = () => {
+        if (allDraftsSelected) {
+            // Deselect all drafts
+            setSelectedDrafts(new Set());
+        } else {
+            // Select all drafts
+            setSelectedDrafts(new Set(draftTaskIds));
+        }
+    };
 
     const handleSubmitSelected = async () => {
         if (selectedDrafts.size === 0) return;
@@ -139,29 +127,22 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
 
         try {
             for (const id of taskIds) {
-                // Find full task object
                 const taskToSubmit = DailyTabelData?.tasks?.find(t => t.id === id);
                 if (!taskToSubmit) continue;
 
                 const payload = {
                     ...taskToSubmit,
-                    status: 1,          
+                    status: 1,
                 };
-
                 console.log("payload for submit", payload);
-
-
                 await updateTaskListAPI(id, payload);
             }
-
             toast.success(`${taskIds.length} task(s) submitted successfully!`);
-
-            // Clear selection
             setSelectedDrafts(new Set());
 
             // Refresh data
-            if (typeof onDeleteSuccess === "function") {
-                onDeleteSuccess(null);   // You can modify this to trigger full refresh
+            if (typeof refereshData === "function") {
+                refereshData();   // You can modify this to trigger full refresh
             }
 
         } catch (err) {
@@ -179,16 +160,12 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
 
         try {
             const res = await deleteTaskListAPI(id);
-
             toast.success(res.message || "Task Deleted success");
 
-            // ── Important ── Tell parent that this task was deleted
             if (typeof onDeleteSuccess === "function") {
                 console.log('typeof onDeleteSuccess', typeof onDeleteSuccess);
-
                 onDeleteSuccess(id);   // pass the deleted id
             }
-
             handleCloseDelete();
         } catch (err) {
             console.error("Delete failed:", err);
@@ -200,6 +177,139 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
     };
 
 
+    const renderApprovalFlow = (task) => {
+        if (!task) return null;
+
+        const steps = [
+            {
+                label: "Created By",
+                name: task.created_by_fullname || task.user || "—",
+                time: task.created_at ? dayjs(task.created_at).format("DD MMM YYYY, HH:mm") : null,
+                status: "completed"
+            },
+            {
+                label: "L1 Approver",
+                name: task.l1_approver_name || "—",
+                time: task.l1_approved_at ? dayjs(task.l1_approved_at).format("DD MMM YYYY, HH:mm") : null,
+                status: task.l1_approved_at ? "approved" : "pending"
+            },
+            {
+                label: "L2 Approver",
+                name: task.l2_approver_name || "—",
+                time: task.l2_approved_at ? dayjs(task.l2_approved_at).format("DD MMM YYYY, HH:mm") : null,
+                status: task.l2_approved_at ? "approved" : "pending"
+            }
+        ];
+
+        return (
+            <Box sx={{ mt: 4 }}>
+                <Typography variant="subtitle1" fontWeight={600} gutterBottom>
+                    Approval Flow
+                </Typography>
+
+                <Box sx={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-between',
+                    position: 'relative',
+                    mt: 3,
+                    px: 2
+                }}>
+                    {/* Horizontal Connecting Line */}
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '19px',
+                        left: '28px',
+                        right: '28px',
+                        height: '3px',
+                        backgroundColor: '#bdbdbd',
+                        zIndex: 1
+                    }} />
+
+                    {steps.map((step, index) => {
+                        const isCompleted = step.status === 'completed' || step.status === 'approved';
+                        const isLast = index === steps.length - 1;
+
+                        return (
+                            <Box
+                                key={index}
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    zIndex: 2,
+                                    flex: 1,
+                                    maxWidth: '180px'
+                                }}
+                            >
+                                {/* Circle */}
+                                <Box sx={{
+                                    width: 38,
+                                    height: 38,
+                                    borderRadius: '50%',
+                                    border: `3px solid ${isCompleted ? '#4caf50' : '#9e9e9e'}`,
+                                    backgroundColor: 'white',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '18px',
+                                    fontWeight: 700,
+                                    color: isCompleted ? '#4caf50' : '#9e9e9e',
+                                    boxShadow: '0 2px 6px rgba(0,0,0,0.1)'
+                                }}>
+                                    {index + 1}
+                                </Box>
+
+                                {/* Content Below Circle */}
+                                <Box sx={{ mt: 2, textAlign: 'center' }}>
+                                    <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500 }}>
+                                        {step.label}
+                                    </Typography>
+
+                                    <Typography
+                                        variant="body2"
+                                        fontWeight={600}
+                                        sx={{ mt: 0.5, lineHeight: 1.2 }}
+                                    >
+                                        {step.name}
+                                    </Typography>
+
+                                    {step.time && (
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                            sx={{ display: 'block', mt: 0.5 }}
+                                        >
+                                            {step.time}
+                                        </Typography>
+                                    )}
+
+                                    {step.status === 'approved' && (
+                                        <Chip
+                                            label="Approved"
+                                            size="small"
+                                            color="success"
+                                            sx={{ mt: 1, height: 20, fontSize: '0.7rem' }}
+                                        />
+                                    )}
+
+                                    {step.status === 'pending' && index > 0 && (
+                                        <Chip
+                                            label="Pending"
+                                            size="small"
+                                            color="default"
+                                            variant="outlined"
+                                            sx={{ mt: 1, height: 20, fontSize: '0.7rem' }}
+                                        />
+                                    )}
+                                </Box>
+                            </Box>
+                        );
+                    })}
+                </Box>
+            </Box>
+        );
+    };
 
     return (
         <Box>
@@ -212,22 +322,30 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                 <TableContainer>
                     <Table size="small">
                         <TableHead>
-                            <TableRow sx={{ backgroundColor: "#F7FAFC" }}>
-                                {TabelHeader.map((col) => (
-                                    <TableCell
-                                        key={col.id}
-                                        sx={{
-                                            fontWeight: 700,
-                                            whiteSpace: "nowrap",
-                                            color: "#2D3748",
-                                            borderBottom: "2px solid #E2E8F0",
-                                            py: 2,
-                                            lineHeight: 1.2,
-                                        }}
-                                    >
-                                        {col.title}
-                                    </TableCell>
-                                ))}
+                            <TableRow sx={{ backgroundColor: "#F7FAFC", whiteSpace: "nowrap", color: "#2D3748", borderBottom: "2px solid #E2E8F0", py: 2, lineHeight: 1.2, }}>
+                                <TableCell>
+                                    {/* Select All Checkbox - Only for Drafts */}
+                                    {draftTaskIds.length > 0 && (
+                                        <Checkbox
+                                            size="small"
+                                            checked={allDraftsSelected}
+                                            indeterminate={someDraftsSelected}
+                                            onChange={handleSelectAll}
+                                        />
+                                    )}
+                                </TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Task Id</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Date</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Platform</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Task</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Sub Task</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Bitrix Id</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Description</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Duration</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Status</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Created by</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Created at</TableCell>
+                                <TableCell sx={{ fontWeight: 700, }}>Action</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -271,7 +389,7 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                                                 color={getStatusColor(data.status_name)}
                                             />
                                         </TableCell>
-                                        <TableCell>{data.user || "-"}</TableCell>
+                                        <TableCell>{data.created_by_fullname || "-"}</TableCell>
                                         <TableCell>
                                             {data.created_at ? dayjs(data.created_at).format("DD MMM YYYY, HH:mm") : "-"}
                                         </TableCell>
@@ -321,9 +439,8 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                             variant="contained"
                             color="success"
                             onClick={handleSubmitSelected}
-                        //disabled={loading}
                         >
-                            Submit Selected ({selectedDrafts.size})
+                            Submit ({selectedDrafts.size})
                         </Button>
                     </Box>
                 )}
@@ -471,7 +588,7 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                         </Grid>
                     )}
 
-                    <Box sx={{ mt: 4 }}>
+                    {/* <Box sx={{ mt: 4 }}>
                         <Typography variant="h6" gutterBottom sx={{ color: "info.dark" }}>
                             Approval Log
                         </Typography>
@@ -521,11 +638,12 @@ const DailyTaskData = ({ DailyTabelData, onDeleteSuccess }) => {
                                 No approval history available yet.
                             </Typography>
                         )}
-                    </Box>
+                    </Box> */}
+                    {renderApprovalFlow(selectedTask)}
                 </DialogContent>
 
                 <DialogActions>
-                    <Button onClick={handleCloseView} variant="outlined">
+                    <Button onClick={handleCloseView} variant="outlined" color="error">
                         Close
                     </Button>
                 </DialogActions>
