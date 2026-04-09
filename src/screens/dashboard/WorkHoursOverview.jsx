@@ -6,7 +6,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { toast } from "react-toastify";
 import { fetchWorkHoursOverviewAPI } from "../../Api/userDashboardApi";
 
-const WorkHoursOverview = () => {
+const WorkHoursOverview = ({ userId }) => {
 
     const [workHours, setWorkHours] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,7 @@ const WorkHoursOverview = () => {
             setLoading(true);
             try {
                 const apiView = view === "weekly" ? "week" : "year";
-                const response = await fetchWorkHoursOverviewAPI({ view: apiView });
+                const response = await fetchWorkHoursOverviewAPI({ user_id: userId, view: apiView });
                 setWorkHours(response);
             } catch (err) {
                 console.error("Failed to load Work Hours Overview data:", err);

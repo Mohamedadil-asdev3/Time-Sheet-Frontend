@@ -112,7 +112,7 @@ import { toast } from "react-toastify";
 
 import { fetchTopTasksUsedAPI } from "../../Api/userDashboardApi";
 
-const TopUsedTasks = () => {
+const TopUsedTasks = ({ userId }) => {
     const [topTasks, setTopTasks] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -120,7 +120,7 @@ const TopUsedTasks = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetchTopTasksUsedAPI();
+                const response = await fetchTopTasksUsedAPI(userId);
 
                 // Handle different possible API response structures
                 const tasks = response?.tasks || response?.data || response || [];

@@ -500,7 +500,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { fetchDailyTimelineAPI } from "../../Api/userDashboardApi";
 
-const DailyTimeline = ({ onEntryClick }) => {
+const DailyTimeline = ({ userId, onEntryClick }) => {
 
     const categoryConfig = {
         Development: { bg: "#6670dc", color: "#ffffff" },
@@ -524,7 +524,7 @@ const DailyTimeline = ({ onEntryClick }) => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetchDailyTimelineAPI();
+                const response = await fetchDailyTimelineAPI(userId);
                 setTimeLine(Array.isArray(response) ? response : []);
             } catch (err) {
                 console.error("Failed to load Daily Time Line:", err);

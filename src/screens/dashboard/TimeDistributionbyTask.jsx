@@ -150,7 +150,7 @@ import { toast } from "react-toastify";
 import { fetchTimeDistributionByTaskAPI } from "../../Api/userDashboardApi";
 
 
-const TimeDistributionbyTask = () => {
+const TimeDistributionbyTask = ({userId}) => {
     const [view, setView] = useState("daily");
     const [timeDistribution, setTimeDistribution] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -161,7 +161,7 @@ const TimeDistributionbyTask = () => {
             setLoading(true);
             try {
                 const apiView = view; // "daily", "weekly", or "monthly"
-                const response = await fetchTimeDistributionByTaskAPI({ view: apiView });
+                const response = await fetchTimeDistributionByTaskAPI({ user_id: userId, view: apiView });
                 setTimeDistribution(response);
             } catch (err) {
                 console.error("Failed to load Time Distribution:", err);

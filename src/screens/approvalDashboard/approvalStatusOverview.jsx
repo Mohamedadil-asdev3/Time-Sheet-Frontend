@@ -185,11 +185,11 @@ const ApprovalStatusOverview = () => {
             animations: { enabled: true },
         },
         labels: ["Completed", "Pending", "Approved", "Rejected"],
-        colors: ["#4CAF50", "#FFC107", "#2196F3", "#F44336"],
+        colors: ["#9C27B0", "#FFC107", "#4CAF50", "#F44336"],
         legend: {
             position: "bottom",
             horizontalAlign: "center",
-            fontSize: "14px",
+            fontSize: "12px",
             markers: { width: 12, height: 12, radius: 12 },
         },
         dataLabels: {
@@ -215,7 +215,7 @@ const ApprovalStatusOverview = () => {
         >
             <CardContent>
                 {/* Header */}
-                <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" mb={0.5}>
                     <Typography variant="h6" fontWeight={700}>
                         Approval Status Overview
                     </Typography>
@@ -246,12 +246,11 @@ const ApprovalStatusOverview = () => {
                 </Stack>
 
                 {/* Summary Stats */}
-                <Box sx={{ mb: 3 }}>
-                    <Typography variant="h5" fontWeight={600} gutterBottom>
-                        Total Tasks: <strong>{data.total}</strong>
-                    </Typography>
-
-                    <Stack direction="row" flexWrap="wrap" gap={2.5} mt={1}>
+                <Box>
+                    <Stack direction="row" flexWrap="wrap" gap={1}>
+                        <Typography variant="caption" color="text.secondary">
+                            Total Tasks: <strong>{data.total}</strong>
+                        </Typography>
                         <Typography variant="caption" color="text.secondary">
                             Completed: <strong style={{ color: "#4CAF50" }}>{data.completed}</strong>
                         </Typography>
@@ -268,7 +267,7 @@ const ApprovalStatusOverview = () => {
                 </Box>
 
                 {/* Chart Area */}
-                <Box mt={2} display="flex" justifyContent="center" alignItems="center" minHeight={280}>
+                <Box mt={1} display="flex" justifyContent="center" alignItems="center" minHeight={280}>
                     {loading ? (
                         <CircularProgress />
                     ) : data.total === 0 ? (
@@ -280,8 +279,8 @@ const ApprovalStatusOverview = () => {
                             options={options}
                             series={series}
                             type="pie"
-                            width={340}
-                            height={300}
+                            width={350}
+                            height={340}
                         />
                     )}
                 </Box>

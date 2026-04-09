@@ -94,20 +94,14 @@ const ApprovalDashboard = () => {
                 <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                     <ApprovalRecentRequests />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
-                    <ApprovalStatusOverview />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
+                <Grid size={{ xs: 12, sm: 4, lg: 12 }}>
                     <ApprovalMembersTaskTime />
                 </Grid>
-                <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
-                    <ApprovalTotalTask />
+                <Grid size={{ xs: 12, sm: 4, lg: 6 }}>
+                    <ApprovalStatusOverview />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
                     <ApprovalTopPlatform />
-                </Grid>
-                <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                    <ApprovalPlatformGraph />
                 </Grid>
                 <Grid size={{ xs: 12, sm: 12, lg: 12 }}>
                     <ApprovalMembers />

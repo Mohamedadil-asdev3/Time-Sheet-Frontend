@@ -97,7 +97,7 @@ const TaskPage = () => {
 
     return (
         <>
-            <Grid container spacing={2}>
+            <Grid container spacing={1.5}>
                 <Grid size={12}>
                     <ProfileInfo profileData={profileData} />
                 </Grid>

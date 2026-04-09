@@ -557,7 +557,7 @@ const ApprovalCard = ({ approvalData = [] }) => {
                 <Box
                     key={column.id}
                     sx={{
-                        minWidth: 300,
+                        minWidth: 415,
                         flex: "0 0 auto",
                         bgcolor: "#eef1f7",
                         borderRadius: 3,

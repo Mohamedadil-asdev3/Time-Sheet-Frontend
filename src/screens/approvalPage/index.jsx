@@ -68,7 +68,7 @@ const ApprovalPage = () => {
                             </Box>
                             {/* Filter Section */}
                             {OpenFilter && (
-                                <Box mt={2}>
+                                <Box mt={1}>
                                     <Grid container spacing={2}>
                                         <Grid size={{ xs: 12, md: 3 }}>
                                             <TextField
@@ -121,7 +121,7 @@ const ApprovalPage = () => {
                                 sx={{
                                     flexWrap: "wrap",
                                     gap: 1.5,
-                                    mt: 1.5,
+                                    mt: 1,
                                 }}
                             >
                                 {tabs.map((tab) => (

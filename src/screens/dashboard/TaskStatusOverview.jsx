@@ -315,7 +315,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { toast } from "react-toastify";
 import { fetchTaskStatusOverviewAPI } from "../../Api/userDashboardApi";
 
-const TaskStatusOverview = () => {
+const TaskStatusOverview = ({ userId }) => {
     const [taskData, setTaskData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [view, setView] = useState("daily");
@@ -324,7 +324,7 @@ const TaskStatusOverview = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetchTaskStatusOverviewAPI({ view: view });
+                const response = await fetchTaskStatusOverviewAPI({ user_id: userId, view: view });
                 setTaskData(response);
             } catch (err) {
                 console.error("Failed to load Task Status Overview:", err);
@@ -376,7 +376,7 @@ const TaskStatusOverview = () => {
         legend: {
             position: "bottom",
             horizontalAlign: "center",
-            fontSize: "13px",
+            fontSize: "12px",
             markers: { width: 12, height: 12, radius: 12 },
         },
         dataLabels: {
@@ -444,9 +444,9 @@ const TaskStatusOverview = () => {
                 {/* Total Tasks */}
                 <Box >
                     <Typography variant="caption" fontWeight={700} color="primary">
-                       Total Task: {totalTasks}
+                        Total Task: {totalTasks}
                     </Typography>
-                    
+
                 </Box>
 
                 {/* Status Summary */}

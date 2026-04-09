@@ -107,7 +107,7 @@ const ApprovalTopMembers = () => {
         <Card sx={{ borderRadius: 4, boxShadow: 3, height: "100%" }}>
             <CardContent>
                 {/* Header */}
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
                     <Typography variant="h6" fontWeight={700}>
                         Top Members
                     </Typography>
@@ -125,7 +125,7 @@ const ApprovalTopMembers = () => {
 
                 {/* Members List */}
                 {!loading && (
-                    <Stack spacing={2.5}>
+                    <Stack >
                         {topMembers.length === 0 ? (
                             <Typography color="text.secondary" align="center" sx={{ py: 4 }}>
                                 No top members found

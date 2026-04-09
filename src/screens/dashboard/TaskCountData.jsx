@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { fetchUserCardCountAPI } from "../../Api/userDashboardApi";
 //import { fetchUserCardCountAPI } from "../../Api";
 
-const TaskCountData = () => {
+const TaskCountData = ({ userId }) => {
 
     const [CardData, setCardData] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -18,7 +18,7 @@ const TaskCountData = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetchUserCardCountAPI();
+                const response = await fetchUserCardCountAPI(userId);
                 setCardData(response || []);
             } catch (err) {
                 console.error("Failed to load Daily Time Line:", err);

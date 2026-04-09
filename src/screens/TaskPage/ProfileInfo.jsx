@@ -6,24 +6,18 @@ import BadgeIcon from "@mui/icons-material/Badge";
 
 const ProfileInfo = ({ profileData }) => {
 
-    const InfoItem = ({ icon, text }) => (
-        <Stack direction="row" spacing={1} alignItems="center">
-            <Icon>{icon}</Icon>
-            <Typography fontSize={14} fontWeight={550}>{text}</Typography>
-        </Stack>
-    );
 
     return (
         <>
             <Card sx={{ display: "flex", gap: 5, alignItems: "center", py: 1 }}>
                 <Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, px: 2, }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, px: 1, }}>
                         <Avatar
                             sx={{
-                                width: 76,
-                                height: 76,
+                                width: 50,
+                                height: 50,
                                 bgcolor: "#6FD3C6",
-                                fontSize: 36,
+                                fontSize: 25,
                                 border: "4px solid white",
                             }}
                         >
@@ -42,18 +36,18 @@ const ProfileInfo = ({ profileData }) => {
                     </Box>
                 </Box>
                 <Box>
-                    <Grid container columnSpacing={8} rowSpacing={1}>
+                    <Grid container columnSpacing={4} rowSpacing={1}>
                         <Grid size="auto">
                             <Typography variant="caption" color="text.secondary">
                                 BUSINESS UNIT
                             </Typography>
-                            <Typography fontSize={14} fontWeight={550}>{profileData?.business_unit || ""}</Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.business_unit || "-"}</Typography>
                         </Grid>
                         <Grid size="auto">
                             <Typography variant="caption" color="text.secondary">
                                 DEPARTMENT
                             </Typography>
-                            <Typography fontSize={14} fontWeight={550}>{profileData?.department || ""}</Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.department || "-"}</Typography>
                         </Grid>
                         <Grid size="auto">
                             <Typography variant="caption" color="text.secondary">
@@ -61,22 +55,32 @@ const ProfileInfo = ({ profileData }) => {
                             </Typography>
                             <Stack direction="row" spacing={1} alignItems="center">
                                 <Avatar sx={{ width: 25, height: 25, fontSize: 13, bgcolor: "primary.main", }} />
-                                <Typography fontSize={14} fontWeight={550}>{profileData?.manager_name || ""}</Typography>
+                                <Typography fontSize={14} fontWeight={550}>{profileData?.manager_name || "-"}</Typography>
                             </Stack>
                         </Grid>
-                    </Grid>
-                    <Grid container columnSpacing={7} rowSpacing={1} mt={0.5}>
                         <Grid size="auto">
-                            <InfoItem icon={<EmailIcon />} text={profileData?.email || ""} />
+                            <Typography variant="caption" color="text.secondary">
+                                EMAIL
+                            </Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.email || "-"}</Typography>
                         </Grid>
                         <Grid size="auto">
-                            <InfoItem icon={<PhoneIcon />} text={profileData?.phone || ""} />
+                            <Typography variant="caption" color="text.secondary">
+                                PHONE
+                            </Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.phone || "-"}</Typography>
                         </Grid>
                         <Grid size="auto">
-                            <InfoItem icon={<LocationOnIcon />} text={profileData?.location || ""} />
+                            <Typography variant="caption" color="text.secondary">
+                                LOCATION
+                            </Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.location || "-"}</Typography>
                         </Grid>
                         <Grid size="auto">
-                            <InfoItem icon={<BadgeIcon />} text={profileData?.employee_id || ""} />
+                            <Typography variant="caption" color="text.secondary">
+                                EMPLOYEE ID
+                            </Typography>
+                            <Typography fontSize={14} fontWeight={550}>{profileData?.employee_id || "-"}</Typography>
                         </Grid>
                     </Grid>
                 </Box>

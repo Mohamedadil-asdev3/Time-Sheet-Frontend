@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Grid, IconButton, Typography } from "@mui/material"
 import TaskCountData from "./TaskCountData";
 import DailyTimeline from "./DailyTimeline";
-import TaskTimer from "./TaskTimer";
+//import TaskTimer from "./TaskTimer";
 import TaskStatusOverview from "./TaskStatusOverview";
 import WorkHoursOverview from "./WorkHoursOverview";
 import TimeDistributionbyTask from "./TimeDistributionbyTask";
@@ -20,6 +20,19 @@ const Dashboard = () => {
     const [showFilters, setShowFilters] = useState(false);
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
+
+    const userId = useMemo(() => {
+        try {
+            const userData = localStorage.getItem('user');   // Common key: 'user'
+            if (!userData) return null;
+
+            const parsedUser = JSON.parse(userData);
+            return parsedUser?.id || parsedUser?.user_id || parsedUser?.userId || null;
+        } catch (error) {
+            console.error("Failed to parse user from localStorage:", error);
+            return null;
+        }
+    }, []);
 
     return (
         <>
@@ -87,25 +100,25 @@ const Dashboard = () => {
                     </Grid>
 
                     <Grid size={{ xs: 12, md: 12, lg: 12 }}>
-                        <TaskCountData />
+                        <TaskCountData userId={userId} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 8, lg: 12 }}>
-                        <DailyTimeline />
+                        <DailyTimeline userId={userId} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
-                        <TaskStatusOverview />
+                        <TaskStatusOverview userId={userId} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
-                        <WorkHoursOverview />
+                        <WorkHoursOverview userId={userId} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 4, lg: 4 }}>
-                        <TimeDistributionbyTask />
+                        <TimeDistributionbyTask userId={userId} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                        <RecentTasks />
+                        <RecentTasks userId={userId} />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6, lg: 6 }}>
-                        <TopUsedTasks />
+                        <TopUsedTasks userId={userId} />
                     </Grid>
                 </Grid>
             </Box >

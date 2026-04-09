@@ -1,9 +1,11 @@
 import axios from "axios";
 import { API_BASE_URL } from "../apiUtils";
 
-export const fetchUserCardCountAPI = async () => {
+export const fetchUserCardCountAPI = async (user_id) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}task/tasks/counts/`, );
+        const res = await axios.get(`${API_BASE_URL}task/tasks/counts/`, {
+            params: { user_id }
+        });
         return res.data;
     } catch (err) {
         console.error("Failed to fetch User Card Data:", err.response?.data || err.message);
@@ -11,9 +13,11 @@ export const fetchUserCardCountAPI = async () => {
     }
 };
 
-export const fetchDailyTimelineAPI = async () => {
+export const fetchDailyTimelineAPI = async (user_id) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}task/tasks/daily-timeline/`,);
+        const res = await axios.get(`${API_BASE_URL}task/tasks/daily-timeline/`, {
+            params: { user_id }
+        });
         return res.data;
     } catch (err) {
         console.error("Failed to fetch Daily Time Line:", err.response?.data || err.message);
@@ -24,7 +28,7 @@ export const fetchDailyTimelineAPI = async () => {
 export const fetchTaskStatusOverviewAPI = async (params = {}) => {
     try {
         const res = await axios.get(`${API_BASE_URL}task/tasks/status-overview/`, {
-            params: { view: params.view }
+            params: { user_id: params.user_id, view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -36,7 +40,7 @@ export const fetchTaskStatusOverviewAPI = async (params = {}) => {
 export const fetchWorkHoursOverviewAPI = async (params = {}) => {
     try {
         const res = await axios.get(`${API_BASE_URL}task/work-hours/`, {
-            params: { view: params.view }
+            params: { user_id: params.user_id, view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -48,7 +52,7 @@ export const fetchWorkHoursOverviewAPI = async (params = {}) => {
 export const fetchTimeDistributionByTaskAPI = async (params = {}) => {
     try {
         const res = await axios.get(`${API_BASE_URL}task/tasks/time-distribution/`, {
-            params: { view: params.view }
+            params: { user_id: params.user_id, view: params.view }
         });
         return res.data;
     } catch (err) {
@@ -57,9 +61,11 @@ export const fetchTimeDistributionByTaskAPI = async (params = {}) => {
     }
 };
 
-export const fetchRecentTasksAPI = async () => {
+export const fetchRecentTasksAPI = async (user_id) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}task/tasks/recent-tasks/`,);
+        const res = await axios.get(`${API_BASE_URL}task/tasks/recent-tasks/`, {
+            params: { user_id }
+        });
         return res.data;
     } catch (err) {
         console.error("Failed to fetch mappings:", err.response?.data || err.message);
@@ -67,9 +73,11 @@ export const fetchRecentTasksAPI = async () => {
     }
 };
 
-export const fetchTopTasksUsedAPI = async () => {
+export const fetchTopTasksUsedAPI = async (user_id) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}task/tasks/top-tasks/`, );
+        const res = await axios.get(`${API_BASE_URL}task/tasks/top-tasks/`, {
+            params: { user_id }
+        });
         return res.data;
     } catch (err) {
         console.error("Failed to fetch mappings:", err.response?.data || err.message);
