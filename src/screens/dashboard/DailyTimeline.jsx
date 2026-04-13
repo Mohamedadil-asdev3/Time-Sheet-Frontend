@@ -548,6 +548,19 @@ const DailyTimeline = ({ userId, onEntryClick }) => {
         return "pending";
     };
 
+    // const getStatusKey = (statusName) => {
+    //     if (!statusName) return "#9E9E9E"; // Gray
+
+    //     const name = statusName.toLowerCase().trim();
+
+    //     if (name === "completed") return "#9C27B0";      // Secondary - Purple
+    //     if (name === "approved") return "#4CAF50";       // Success - Green
+    //     if (name === "submitted" || name === "submited") return "#2196F3"; // Info - Blue
+    //     if (name === "rejected") return "#F44336";       // Red
+    //     if (name === "draft") return "#FF9800";          // Warning - Orange
+    //     return "#9E9E9E"; // Default Gray
+    // };
+
     // Format time
     const formatTime = (isoString) => {
         if (!isoString) return "N/A";
@@ -615,6 +628,7 @@ const DailyTimeline = ({ userId, onEntryClick }) => {
                             const endTime = entry.updated_at ? formatTime(entry.updated_at) : "Ongoing";
 
                             const duration = (entry.duration) || 0;
+                            const status = (entry.status_name) || "";
 
                             return (
                                 <Box
@@ -679,7 +693,7 @@ const DailyTimeline = ({ userId, onEntryClick }) => {
 
                                             <Stack direction="row" spacing={1} alignItems="center">
                                                 <Chip
-                                                    label={statusKey}
+                                                    label={status}
                                                     size="small"
                                                     sx={{
                                                         background: config.bg,

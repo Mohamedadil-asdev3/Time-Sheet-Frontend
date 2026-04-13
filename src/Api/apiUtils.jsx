@@ -3,8 +3,8 @@ import axios from "axios";
 // Constants
 const TOKEN_KEY = "access_token";
 const REFRESH_TOKEN_KEY = "refresh_token";
-//export const API_BASE_URL = "http://localhost:8000/"; // Adil backend
-export const API_BASE_URL = "http://192.168.60.118:8001/"; // venkat backend
+export const API_BASE_URL = "http://localhost:8000/"; // Adil backend
+//export const API_BASE_URL = "http://192.168.60.118:8001/"; // venkat backend
 
 export const setTokens = (accessToken, refreshToken) => {
     localStorage.setItem(TOKEN_KEY, accessToken);

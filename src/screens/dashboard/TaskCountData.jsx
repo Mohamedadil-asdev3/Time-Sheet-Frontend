@@ -1,13 +1,13 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import PendingActionsIcon from "@mui/icons-material/PendingActions";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CancelIcon from "@mui/icons-material/Cancel";
 import TodayIcon from "@mui/icons-material/Today";
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
 import { fetchUserCardCountAPI } from "../../Api/userDashboardApi";
-//import { fetchUserCardCountAPI } from "../../Api";
+
 
 const TaskCountData = ({ userId }) => {
 
@@ -31,48 +31,46 @@ const TaskCountData = ({ userId }) => {
         fetchData();
     }, []);
 
-    const CardCountData = CardData?.normal_counts || {};
-
     const CardCount = [
         {
             id: 1,
-            title: "Total Hours",
-            count: CardCountData?.total_hours || "0h",
+            title: "Today Hours",
+            count: CardData?.today_hours || "0h",
             icon: <AccessTimeIcon />,
             color: "#6FD3C6",
         },
         {
             id: 2,
-            title: "Today Hours",
-            count: CardCountData?.today_hours || "0h",
+            title: "Today Task",
+            count: CardData?.today_hours || 0,
             icon: <TodayIcon />,
             color: "#4FC3F7",
         },
         {
             id: 3,
             title: "Total Task",
-            count: CardCountData?.total_tasks || 0,
+            count: CardData?.total_tasks || 0,
             icon: <TodayIcon />,
             color: "#4FC3F7",
         },
         {
             id: 4,
             title: "Submitted",
-            count: CardCountData?.submitted_tasks || 0,
+            count: CardData?.submitted_tasks || 0,
             icon: <AssignmentTurnedInIcon />,
             color: "#4CAF50",
         },
         {
             id: 5,
-            title: "Pending Approval",
+            title: "Approved",
             count: CardData?.pending_approval?.summary?.total_pending || 0,
-            icon: <PendingActionsIcon />,
-            color: "#FFB74D",
+            icon: <CheckBoxIcon />,
+            color: "#4CAF50",
         },
         {
             id: 6,
             title: "Rejected",
-            count: CardCountData?.rejected_tasks || 0,
+            count: CardData?.rejected_tasks || 0,
             icon: <CancelIcon />,
             color: "#E57373",
         },

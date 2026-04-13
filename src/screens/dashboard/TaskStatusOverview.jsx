@@ -318,13 +318,13 @@ import { fetchTaskStatusOverviewAPI } from "../../Api/userDashboardApi";
 const TaskStatusOverview = ({ userId }) => {
     const [taskData, setTaskData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState("daily");
+    const [view, setView] = useState("day");
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const response = await fetchTaskStatusOverviewAPI({ user_id: userId, view: view });
+                const response = await fetchTaskStatusOverviewAPI({ user_id: userId, time_filter: view });
                 setTaskData(response);
             } catch (err) {
                 console.error("Failed to load Task Status Overview:", err);
@@ -419,22 +419,22 @@ const TaskStatusOverview = ({ userId }) => {
                     <Stack direction="row" spacing={0.5}>
                         <IconButton
                             size="small"
-                            color={view === "daily" ? "primary" : "default"}
-                            onClick={() => setView("daily")}
+                            color={view === "day" ? "primary" : "default"}
+                            onClick={() => setView("day")}
                         >
                             <TodayIcon fontSize="small" />
                         </IconButton>
                         <IconButton
                             size="small"
-                            color={view === "weekly" ? "primary" : "default"}
-                            onClick={() => setView("weekly")}
+                            color={view === "week" ? "primary" : "default"}
+                            onClick={() => setView("week")}
                         >
                             <DateRangeIcon fontSize="small" />
                         </IconButton>
                         <IconButton
                             size="small"
-                            color={view === "monthly" ? "primary" : "default"}
-                            onClick={() => setView("monthly")}
+                            color={view === "month" ? "primary" : "default"}
+                            onClick={() => setView("month")}
                         >
                             <CalendarMonthIcon fontSize="small" />
                         </IconButton>

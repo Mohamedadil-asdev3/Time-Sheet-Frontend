@@ -11,6 +11,16 @@ export const fetchApprovalCardCountAPI = async () => {
     }
 };
 
+// export const fetchApprovalCardCountAPI = async () => {
+//     try {
+//         const res = await axios.get(`${API_BASE_URL}task/tasks/approval-counts/`,);
+//         return res.data;
+//     } catch (err) {
+//         console.error("Failed to fetch mappings:", err.response?.data || err.message);
+//         throw err;
+//     }
+// };
+
 export const fetchTopMenbersAPI = async () => {
     try {
         const res = await axios.get(`${API_BASE_URL}task/top-members/`,);

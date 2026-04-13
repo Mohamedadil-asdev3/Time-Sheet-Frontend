@@ -1,9 +1,21 @@
 import axios from "axios";
 import { API_BASE_URL } from "../apiUtils";
 
+// export const fetchUserCardCountAPI = async (user_id) => {
+//     try {
+//         const res = await axios.get(`${API_BASE_URL}task/tasks/counts/`, {
+//             params: { user_id }
+//         });
+//         return res.data;
+//     } catch (err) {
+//         console.error("Failed to fetch User Card Data:", err.response?.data || err.message);
+//         throw err;
+//     }
+// };
+
 export const fetchUserCardCountAPI = async (user_id) => {
     try {
-        const res = await axios.get(`${API_BASE_URL}task/tasks/counts/`, {
+        const res = await axios.get(`${API_BASE_URL}task/tasks/user-counts/`, {
             params: { user_id }
         });
         return res.data;
@@ -28,7 +40,7 @@ export const fetchDailyTimelineAPI = async (user_id) => {
 export const fetchTaskStatusOverviewAPI = async (params = {}) => {
     try {
         const res = await axios.get(`${API_BASE_URL}task/tasks/status-overview/`, {
-            params: { user_id: params.user_id, view: params.view }
+            params: { user_id: params.user_id, time_filter: params.time_filter }
         });
         return res.data;
     } catch (err) {
